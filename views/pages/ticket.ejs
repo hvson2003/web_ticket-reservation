@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <%- include('./head', {title: 'Ticket Page'}) %>
+</head>
+<body>
+     <%- include('../partials/top_app_bar') %>
+
+     <article class="page home-page">
+          <div class="container">
+              <h2 class="headline-small page-title text-on-surface">
+                  All Tickets
+              </h2>
+              <div class="blog-list">
+                  <% if (locals.allTickets.length) { %>
+                      <% locals.allTickets.forEach(ticket => { %>
+                          <%- include('../partials/card', { ticket }) %>
+                      <% }); %>
+                  <% } %>
+              </div>
+              <% if (locals.pagination.next || locals.pagination.prev) {  %>
+                  <%- include('../partials/pagination') %>
+              <% } %>
+          </div>
+      </article>
+</body>
+</html>

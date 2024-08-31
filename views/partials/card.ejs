@@ -1,0 +1,21 @@
+<% 
+    const {
+        _id: ticketId,
+        name: ticketName,
+        price,
+        quantity,
+        status
+    } = locals.ticket || {};
+%>
+
+<div class="card">
+    <h2><%= ticketName %></h2>
+    <div class="card-content">
+        <p><strong>Price:</strong> <%= price %> VNĐ</p>
+        <p><strong>Tickets Available:</strong> <%= quantity %></p>
+        <p><strong>Status:</strong> <%= status %></p>
+    </div>
+    <div class="card-footer">
+        <button>Add Ticket</button>
+    </div>
+</div>
