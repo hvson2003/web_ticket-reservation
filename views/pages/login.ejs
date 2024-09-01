@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./head', {title: 'Login'}) %>
+</head>
+<body>
+    <div class="container">
+        <form data-form>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Enter your password">
+            </div>
+            <button type="submit" class="btn btn-primary" data-submit-btn>Submit</button>
+        </form>
+        <div class="card-footer">
+            <p class="label-large">Don't have an account?</p>
+            <a href="/register" class="label-large text-primary">Create account</a>
+        </div>
+    </div>
+
+    <!--
+    #SNACKBAR
+    -->
+    <div class="snackbar-wrapper" data-snackbar-wrapper></div>
+
+    <script type="module" src="/js/login.js"></script>
+</body>
+</html>

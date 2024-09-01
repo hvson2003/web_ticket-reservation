@@ -1,36 +1,53 @@
-/*
-  Card
+/* 
+  Snackbar 
 */
-.card {
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 20px;
-  max-width: 400px;
-  margin: 20px auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  font-family: 'Arial', sans-serif;
+.snackbar-wrapper {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    z-index: 4;
 }
 
-.card h2 {
-  font-size: 24px;
-  margin-bottom: 15px;
-  color: #333;
-  text-align: center;
+.snackbar {
+    background-color: #2E3035;
+    color: #EFF0F7;
+    min-height: 48px;
+    max-height: max-content;
+    max-width: 60ch;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    box-shadow: var(--shadow-3);
+    padding: 12px 16px;
+    animation: snackbar-show 400ms cubic-bezier(0, 0, 0, 1) forwards;
 }
 
-.card card-content p {
-  margin: 10px 0;
-  font-size: 16px;
-  color: #555;
+@keyframes snackbar-show {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
 }
 
-.card card-content strong {
-  color: #000;
+.snackbar.error {
+    background-color: #BA1A1A;
+    color: #FFFFFF;
 }
 
-.card card-content p:last-child {
-  margin-bottom: 0;
-}
-
-
+/**
+  Avatar
+*/
+.avatar {
+    height: 32px;
+    width: 32px;
+    min-width: 32px;
+    display: grid;
+    font-size: 20px;
+    place-items: center;
+    background-color: #6C5677;
+    color: #FFFFFF;
+    border-radius: 50%;
+    text-transform: uppercase;
+    overflow: hidden;
+  }
+  
