@@ -54,7 +54,34 @@ const removeBooking = async (req, res) => {
     }
 };
 
+
+/**
+ * Update quantity booking
+ * @param {object} req - The request object.
+ * @param {object} res - The response object.
+ */
+const updateBookingQuantity = async (req, res) => {    
+    const { bookingId } = req.params;
+    const { quantity } = req.body;
+
+    try {
+        const booking = await Booking.findById(bookingId);
+        if (!booking) {
+            return res.status(404).json({ error: 'Booking not found' });
+        }
+
+        booking.quantity = quantity;
+        await booking.save();
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error updating booking quantity:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 module.exports = {
     renderBooking,
-    removeBooking
+    removeBooking,
+    updateBookingQuantity
 } 

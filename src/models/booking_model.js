@@ -19,6 +19,12 @@ const bookingSchema = new mongoose.Schema({
         ref: 'Ticket',
         required: true
     },
+    quantity: {
+        type: Number,
+        required: true,
+        default: 1,
+        min: 1
+    },
     booking_time: {
         type: Date,
         default: Date.now
