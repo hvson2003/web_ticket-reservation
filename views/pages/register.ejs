@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./head', {title: 'Register'}) %>
+</head>
+<body>
+    <div class="container">
+        <form data-form>
+            <div class="form-group">
+                <label for="name">Full name</label>
+                <input type="text" name="name" class="form-control" id="name" placeholder="Enter your full name" autofocus>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your email">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Enter your password">
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" name="confirm_password" class="form-control" id="confirm-password" placeholder="Confirm your password">
+            </div>
+            <button type="submit" class="btn btn-primary" data-submit-btn>Submit</button>
+        </form>
+        <div class="card-footer">
+            <p class="label-large">Already have an account?</p>
+            <a href="/login" class="label-large text-primary">Sign in</a>
+        </div>
+    </div>
+
+    <!--
+    #SNACKBAR
+    -->
+    <div class="snackbar-wrapper" data-snackbar-wrapper></div>
+
+    <script type="module" src="/js/register.js" ></script>
+</body>
+</html>
+

@@ -1,13 +1,40 @@
-<!-- <header>
-    <a href="/" class="btn btn-text">
-        <p class="label-large">Ticket</p>
+<% 
+    const {
+        userAuthenticated,
+        name
+    } = locals.sessionUser || {};
+%>
+<div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            <span class="fs-4">Ticket Reservation</span>
+        </a>
 
-        <div class="state-layer"></div>
-    </a>
-
-    <a href="/register" class="btn btn-fill">
-        <p class="label-large">Booked</p>
-
-        <div class="state-layer"></div>
-    </a>
-</header> -->
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" aria-current="page">Ticket</a>
+            </li>
+            <li class="nav-item">
+                <a href="/booking" class="nav-link">Booking</a>
+            </li>
+            <% if (userAuthenticated) { %>
+                <li class="nav-item d-flex align-items-center">
+                    <div class="avatar me-2">
+                        <p class="title-medium mb-0">
+                            <%= name.at() %>
+                        </p>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <form action="/logout" method="post">
+                        <button type="submit" class="nav-link btn btn-link">Logout</button>
+                    </form>
+                </li>
+            <% } else { %>
+                <li class="nav-item">
+                    <a href="/login" class="nav-link">Login</a>
+                </li>
+            <% } %>
+        </ul>
+    </header>
+</div>

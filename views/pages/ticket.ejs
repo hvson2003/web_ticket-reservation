@@ -6,22 +6,19 @@
 <body>
      <%- include('../partials/top_app_bar') %>
 
-     <article class="page home-page">
-          <div class="container">
-              <h2 class="headline-small page-title text-on-surface">
-                  All Tickets
-              </h2>
-              <div class="blog-list">
-                  <% if (locals.allTickets.length) { %>
-                      <% locals.allTickets.forEach(ticket => { %>
-                          <%- include('../partials/card', { ticket }) %>
-                      <% }); %>
-                  <% } %>
-              </div>
-              <% if (locals.pagination.next || locals.pagination.prev) {  %>
-                  <%- include('../partials/pagination') %>
-              <% } %>
-          </div>
-      </article>
+     <section style="background-color: #eee;">
+        <div class="text-center container py-5">
+            <div class="row">
+                <% if (locals.allTickets.length) { %>
+                    <% locals.allTickets.forEach(ticket => { %>
+                        <%- include('../partials/card', { ticket }) %>
+                    <% }); %>
+                <% } %>
+                <% if (locals.pagination.next || locals.pagination.prev) {  %>
+                    <%- include('../partials/pagination') %>
+                <% } %>
+            </div>
+        </div>
+    </section>
 </body>
 </html>
