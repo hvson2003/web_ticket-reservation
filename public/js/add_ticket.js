@@ -28,6 +28,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    this.textContent = 'Booked'; 
+                    this.classList.remove('btn-primary');
+                    this.classList.add('btn-light');
+                    this.disabled = true; 
                     Snackbar({ message: 'Ticket added to your booking!', type: 'success' });
                 } else {
                     Snackbar({ message: data.error, type: 'error' });

@@ -12,12 +12,15 @@ const router = require('express').Router();
 /**
  * custome modules
  */
-const { renderBooking, removeBooking } = require('../controllers/booking_controller');
+const { renderBooking, removeBooking, updateBookingQuantity } = require('../controllers/booking_controller');
 
-// Route để render trang booking
+// Route render booking page
 router.get('/', renderBooking);
 
-// Route để xóa booking
+// Route delete booking
 router.delete('/remove/:id', removeBooking);
+
+// Route update quantity booking
+router.patch('/update/:bookingId', updateBookingQuantity);
 
 module.exports = router;

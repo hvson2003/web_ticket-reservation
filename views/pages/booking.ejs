@@ -13,13 +13,44 @@
     <% } else { %>
         <p class="text text-dark ps-5 pt-3">You haven't added any tickets yet.</p>
     <% } %>
+
     <% if (locals.pagination.next || locals.pagination.prev) {  %>
         <%- include('../partials/pagination') %>
     <% } %>
+    
     <p class="d-grid gap-2 d-md-flex justify-content-md-end me-4 pe-5 pt-3">
-        <a href="#" class="btn btn-success">Purchase All</a>
+        <a href="#" id="purchase-all-btn" class="btn btn-success">Purchase All</a>
     </p>
 
+    <!-- Modal -->
+    <div class="modal fade" id="purchaseModal" tabindex="-1" aria-labelledby="purchaseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="purchaseModalLabel">Order Summary</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul id="booking-summary-list" class="list-group">
+                        <% locals.allBookings.forEach(booking => { %>
+                            <li class="list-group-item">
+                                <%= booking.ticket_id.name %> - 
+                                <%= booking.ticket_id.price.toLocaleString('vi-VN') %> x 
+                                <%= booking.quantity %> = 
+                                <%= (booking.ticket_id.price * booking.quantity).toLocaleString('vi-VN') %> đ
+                            </li>
+                        <% }); %>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="confirm-purchase-btn" class="btn btn-primary">Confirm Purchase</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/bootstrap.min.js"></script>
     <script src="/js/booking.js" type="module"></script>
 </body>
 </html>
