@@ -54,8 +54,8 @@ const postLogin = async (req, res) => {
         req.session.user = {
             userAuthenticated: true,
             name: currentUser.name,
-            username: currentUser.username,
-        }
+            user_id: currentUser._id,
+        }        
 
         return res.redirect('/');
 

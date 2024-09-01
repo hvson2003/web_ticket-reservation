@@ -11,7 +11,7 @@
             <div class="row">
                 <% if (locals.allTickets.length) { %>
                     <% locals.allTickets.forEach(ticket => { %>
-                        <%- include('../partials/card', { ticket }) %>
+                        <%- include('../partials/ticket_card', { ticket }) %>
                     <% }); %>
                 <% } %>
                 <% if (locals.pagination.next || locals.pagination.prev) {  %>

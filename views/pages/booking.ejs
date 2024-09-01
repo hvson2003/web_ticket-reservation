@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <%- include('./head', {title: 'Booking Page'}) %>
+</head>
+<body>
+     <%- include('../partials/top_app_bar') %>
+
+     <% if (locals.allBookings.length) { %>
+        <% locals.allBookings.forEach(booking => { %>
+            <%- include('../partials/booking_card', { booking }) %>
+        <% }); %>
+    <% } %>
+    <% if (locals.pagination.next || locals.pagination.prev) {  %>
+        <%- include('../partials/pagination') %>
+    <% } %>
+</body>
+</html>
