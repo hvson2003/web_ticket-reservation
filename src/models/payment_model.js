@@ -22,6 +22,12 @@ const paymentSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    status: { 
+        type: String, 
+        required: true,
+        enum: ['paid', 'cancel'], 
+        default: 'paid' 
+    },
     payment_method: {
         type: String,
         enum: ['credit_card', 'paypal', 'bank_transfer'],
@@ -30,5 +36,7 @@ const paymentSchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
+
+paymentSchema.index({ booking_id: 1, status: 1 });
 
 module.exports = mongoose.model('Payment', paymentSchema);

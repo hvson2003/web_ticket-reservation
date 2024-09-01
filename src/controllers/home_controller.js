@@ -8,6 +8,7 @@
  * custom modules
  */
 const Ticket = require('../models/ticket_model');
+const Booking = require('../models/booking_model');
 const getPagination = require('../utils/get_pagination_utils');
 
 /**
@@ -24,10 +25,18 @@ const renderTicket = async (req, res) => {
         .select('id name price remaining_quantity status')
         .limit(pagination.limit)
         .skip(pagination.skip);
-
+        
+        const allTicketsWithBookingStatus = await Promise.all(allTickets.map(async (ticket) => {
+            const isBooked = await checkIfTicketBooked(req.session.user.user_id, ticket._id);
+            return {
+                ...ticket._doc,
+                isBooked
+            };
+        }));
+        
         res.render('./pages/home', {
             sessionUser: req.session.user,
-            allTickets,
+            allTickets: allTicketsWithBookingStatus,
             pagination
         }); 
     } catch (error) {
@@ -37,6 +46,18 @@ const renderTicket = async (req, res) => {
 
 }
 
+const checkIfTicketBooked = async (userId, ticketId) => {
+    try {
+        const booking = await Booking.findOne({ user_id: userId, ticket_id: ticketId });
+        
+        return booking ? true : false;
+    } catch (error) {
+        console.error('Error checking booking status:', error);
+        return false;
+    }
+};
+
 module.exports = {
-    renderTicket
+    renderTicket,
+    checkIfTicketBooked
 } 

@@ -4,7 +4,8 @@
         name,
         price,
         remaining_quantity,
-        status
+        status,
+        isBooked
     } = locals.ticket || {};
 %>
 
@@ -16,14 +17,14 @@
             <h5 class="card-title mb-3"><%= name %></h5>
         </p>
         <h6 class="mb-3">
-            <strong class="ms-2 text-danger"><%= price %> đ</strong>
+            <strong class="ms-2 text-danger"><%= price.toLocaleString('vi-VN') %> đ</strong>
         </h6>
         <div href="" class="text-reset">
             <p>Remaining: <%= remaining_quantity %></p>
         </div>
     </div>
     <div class="card-footer">
-        <% if (status === 'available') { %>
+        <% if (status === 'available' && !isBooked) { %>
             <a class="btn btn-primary add-ticket-btn" data-ticket-id="<%= _id %>">Add Ticket</a>
         <% } else { %>
             <a class="btn btn-light">Booked</a>
