@@ -12,7 +12,7 @@ const router = require('express').Router();
 /**
  * custome modules
  */
-const { renderTicket } = require('../controllers/ticket_controller');
+const { renderTicket } = require('../controllers/home_controller');
 
 router.get('/', renderTicket);
 

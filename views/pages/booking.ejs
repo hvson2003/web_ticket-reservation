@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <%- include('./head', {title: 'Booking Page'}) %>
+     <%- include('./head', {title: 'Booking List'}) %>
 </head>
 <body>
      <%- include('../partials/top_app_bar') %>
@@ -10,6 +10,8 @@
         <% locals.allBookings.forEach(booking => { %>
             <%- include('../partials/booking_card', { booking }) %>
         <% }); %>
+    <% } else { %>
+        <p class="text text-dark ps-5 pt-3">You haven't added any tickets yet.</p>
     <% } %>
     <% if (locals.pagination.next || locals.pagination.prev) {  %>
         <%- include('../partials/pagination') %>
