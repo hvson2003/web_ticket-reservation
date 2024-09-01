@@ -38,6 +38,23 @@ const renderBooking = async (req, res) => {
 
 }
 
+/**
+ * Delete booking
+ * @param {object} req - The request object.
+ * @param {object} res - The response object.
+ */
+const removeBooking = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Booking.findByIdAndDelete(id);
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error removing booking:', error);
+        res.status(500).json({ success: false, error: 'An error occurred while removing the booking.' });
+    }
+};
+
 module.exports = {
-    renderBooking
+    renderBooking,
+    removeBooking
 } 
