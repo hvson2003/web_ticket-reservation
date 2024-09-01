@@ -9,8 +9,9 @@ const mongoose = require('mongoose');
  * mongoose schema for bookings
  */
 const bookingSchema = new mongoose.Schema({
-    user_name: {
-        type: String,
+    user_id: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'User',
         required: true
     },
     ticket_id: {

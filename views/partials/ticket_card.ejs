@@ -1,6 +1,6 @@
 <% 
     const {
-        _id: ticketId,
+        _id,
         name,
         price,
         remaining_quantity,
@@ -23,8 +23,11 @@
         </div>
     </div>
     <div class="card-footer">
-        <p><%= status %></p>
-        <a class="btn btn-primary">Add Ticket</a>
+        <% if (status === 'available') { %>
+            <a class="btn btn-primary">Add Ticket</a>
+        <% } else { %>
+            <a class="btn btn-light">Booked</a>
+        <% } %>
     </div>
     </div>
 </div>
