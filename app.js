@@ -14,10 +14,11 @@ const MongoStore = require('connect-mongo');
 const register = require('./src/routes/register_route');
 const login = require('./src/routes/login_route');
 const logout = require('./src/routes/logout_route');
-const ticket = require('./src/routes/ticket_route');
+const home = require('./src/routes/home_route');
+const ticketAdd = require('./src/routes/ticket_add_route');
+
 const booking = require('./src/routes/booking_route');
 const { connectDB, disconnectDB } = require('./src/config/mongoose_config');
-
 
 /**
  * initial express
@@ -28,6 +29,7 @@ app.set('view engine', 'ejs');
 app.use(express.static(`${__dirname}/public`));
 
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
 
 /**
  * instance for session storage
@@ -61,8 +63,11 @@ app.use('/login', login);
 /** logout page */
 app.use('/logout', logout);
 
+/** home page */
+app.use('/', home);
+
 /** ticket page */
-app.use('/', ticket);
+app.use('/tickets', ticketAdd);
 
 /** booking page */
 app.use('/booking', booking);

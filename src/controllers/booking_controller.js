@@ -25,8 +25,6 @@ const renderBooking = async (req, res) => {
             .populate('ticket_id')
             .limit(pagination.limit)
             .skip(pagination.skip);
-
-        console.log(allBookings);
         
         res.render('./pages/booking', {
             sessionUser: req.session.user,

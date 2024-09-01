@@ -25,7 +25,7 @@ const renderTicket = async (req, res) => {
         .limit(pagination.limit)
         .skip(pagination.skip);
 
-        res.render('./pages/ticket', {
+        res.render('./pages/home', {
             sessionUser: req.session.user,
             allTickets,
             pagination

@@ -24,7 +24,7 @@
     </div>
     <div class="card-footer">
         <% if (status === 'available') { %>
-            <a class="btn btn-primary">Add Ticket</a>
+            <a class="btn btn-primary add-ticket-btn" data-ticket-id="<%= _id %>">Add Ticket</a>
         <% } else { %>
             <a class="btn btn-light">Booked</a>
         <% } %>
