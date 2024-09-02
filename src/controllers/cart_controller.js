@@ -17,10 +17,12 @@ const getPagination = require('../utils/get_pagination_utils');
  */
 const renderCart = async (req, res) => {
     try {
+        const userId = req.session.user && req.session.user.user_id ? req.session.user.user_id : '';
+
         const totalCards = await Cart.countDocuments();
         const pagination = getPagination('/', req.params, 15, totalCards);  
 
-        const allCarts = await Cart.find({ user_id: req.session.user.user_id })
+        const allCarts = await Cart.find({ user_id: userId })
             .populate('ticket_id')
             .limit(pagination.limit)
             .skip(pagination.skip);
@@ -31,10 +33,9 @@ const renderCart = async (req, res) => {
             pagination
         }); 
     } catch (error) {
-        console.error('Error rendering home page: ', error.message);
+        console.error('Error rendering cart page: ', error.message);
         throw error;
     }
-
 }
 
 /**

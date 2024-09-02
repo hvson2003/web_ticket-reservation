@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <%- include('./head', {title: 'Cart List'}) %>
+</head>
+<body>
+     <%- include('../partials/top_app_bar') %>
+
+     <% if (allBookings.length) { %>
+        <% allBookings.forEach(booking => { %>
+            <%- include('../partials/booking_card', { booking }) %>
+        <% }); %>
+    <% } else { %>
+        <p class="text text-dark ps-5 pt-3">You haven't bought any tickets yet.</p>
+    <% } %>
+
+    <% if (pagination.next || pagination.prev) {  %>
+        <%- include('../partials/pagination') %>
+    <% } %>
+  
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/booking.js" type="module"></script>
+</body>
+</html>

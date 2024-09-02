@@ -18,6 +18,8 @@ const getPagination = require('../utils/get_pagination_utils');
  */
 const renderTicket = async (req, res) => {
     try {
+        const userId = req.session.user && req.session.user.user_id ? req.session.user.user_id : '';
+
         const totalTickets = await Ticket.countDocuments();
         const pagination = getPagination('/', req.params, 15, totalTickets); 
 
@@ -27,7 +29,7 @@ const renderTicket = async (req, res) => {
         .skip(pagination.skip);
         
         const allTicketsWithBookingStatus = await Promise.all(allTickets.map(async (ticket) => {
-            const isBooked = await checkIfTicketBooked(req.session.user.user_id, ticket._id);
+            const isBooked = await checkIfTicketBooked(userId, ticket._id);
             return {
                 ...ticket._doc,
                 isBooked
