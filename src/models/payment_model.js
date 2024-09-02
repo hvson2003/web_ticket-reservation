@@ -9,12 +9,17 @@ const mongoose = require('mongoose');
  * mongoose schema for payments
  */
 const paymentSchema = new mongoose.Schema({
-    booking_id: {
+    user_id: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    booking_ids: [{
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'Booking',
         required: true
-    },
-    amount: {
+    }],
+    total_cost: {
         type: Number,
         required: true
     },
@@ -27,16 +32,9 @@ const paymentSchema = new mongoose.Schema({
         required: true,
         enum: ['paid', 'cancel'], 
         default: 'paid' 
-    },
-    payment_method: {
-        type: String,
-        enum: ['credit_card', 'paypal', 'bank_transfer'],
-        required: true
     }
 }, {
     timestamps: true
 });
-
-paymentSchema.index({ booking_id: 1, status: 1 });
 
 module.exports = mongoose.model('Payment', paymentSchema);

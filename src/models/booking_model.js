@@ -28,14 +28,6 @@ const bookingSchema = new mongoose.Schema({
     booking_time: {
         type: Date,
         default: Date.now
-    },
-    confirmation_time: {
-        type: Date
-    },
-    status: {
-        type: String,
-        enum: ['pending', 'removed'],
-        default: 'pending'
     }
 }, {
     timestamps: true
