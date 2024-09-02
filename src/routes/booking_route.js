@@ -12,9 +12,12 @@ const router = require('express').Router();
 /**
  * custome modules
  */
-const { addBooking } = require('../controllers/booking_controller');
+const { renderBookedTickets, addBooking } = require('../controllers/booking_controller');
 
-// Route create payment
+// Route render booked ticket page
+router.get('/', renderBookedTickets);
+
+// Route add booking
 router.post('/create', addBooking);
 
 module.exports = router;

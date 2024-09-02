@@ -1,0 +1,53 @@
+<% 
+    const {
+        _id,
+        user_id,
+        tickets,
+        total_cost,
+        status,
+        booking_time,
+    } = locals.booking || {};    
+%>
+
+<div class="cart card mx-5 mb-3" data-booking-id="<% _id %>">
+    <div class="row g-0">
+        <div class="card-header">
+            <h4 class="">Booking Information</h4>
+        </div>
+        <div class="col-md-5 px-4">
+            <div class="card-body">
+                <% tickets.forEach(ticket => { %>
+                    <p>
+                        <span class="text text-primary"><%= ticket.ticket_id.name %>:</span>
+                        <%= ticket.ticket_id.price.toLocaleString('vi-VN') %> đ 
+                        * <%= ticket.quantity %> = 
+                        <%= (ticket.ticket_id.price * ticket.quantity).toLocaleString('vi-VN') %> đ
+                    </p>
+                <% }) %>
+                <p class="card-text">
+                    <span class="text text-primary">Total Cost:</span> <%= total_cost.toLocaleString('vi-VN') %> đ
+                </p>    
+            </div>
+        </div>
+        <div class="col-md-5 py-3">
+            <p class="card-text">
+                Status: <span class="text-dark"><strong class="text text-primary"><%= status %></strong></span>
+            </p>
+            <p class="card-text">
+                Booked time: 
+                <span class="text text-secondary">
+                    <%= new Date(booking.booking_time).toLocaleString('vi-VN') %>
+                </span>
+            </p>  
+        </div>
+        <% if (status === 'paid') { %>
+            <div class="col-md-2 px-2 pt-4">
+                <a href="" class="btn btn-danger" data-ticket-id="<%= booking._id %>">Cancel</a>
+            </div>
+        <% } else { %>
+            <div class="col-md-2 px-2 pt-4">
+                <p class="text text-danger">Canceled</p>
+            </div>
+        <% } %>
+    </div>
+</div>

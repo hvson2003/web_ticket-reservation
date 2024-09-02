@@ -37,8 +37,8 @@
                             <li class="list-group-item" data-cart-id="<%= cart.ticket_id._id %>">
                                 <%= cart.ticket_id.name %> - 
                                 <%= cart.ticket_id.price.toLocaleString('vi-VN') %> x 
-                                <input type="number" class="form-control quantity-input text-center" value="<%= cart.quantity %>" min="1" style="width: 60px; display: inline-block;" readonly> = 
-                                <%= (cart.ticket_id.price * cart.quantity).toLocaleString('vi-VN') %> đ
+                                <input type="number" class="form-control quantity-input text-center" data-price="<%= cart.ticket_id.price %>" value="<%= cart.quantity %>" min="1" style="width: 60px; display: inline-block;" readonly> = 
+                                <span class="item-total-cost"><%= (cart.ticket_id.price * cart.quantity).toLocaleString('vi-VN') %> đ</span>
                                 <% totalCost += cart.ticket_id.price * cart.quantity; %>
                             </li>
                         <% }); %>

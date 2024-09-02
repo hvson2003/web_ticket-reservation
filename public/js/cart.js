@@ -58,6 +58,29 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // function updateModal() {
+    //     const cartSummaryList = document.querySelector('#cart-summary-list');
+    //     const totalCostElement = document.getElementById('totalCost');
+    //     let totalCost = 0;
+    
+    //     const cartItems = cartSummaryList.querySelectorAll('li');
+    
+    //     cartItems.forEach(item => {
+    //         const price = parseFloat(item.querySelector('.quantity-input').getAttribute('data-price'));
+    //         const quantity = parseInt(item.querySelector('.quantity-input').value);
+    //         const itemTotalCost = price * quantity;
+    //         totalCost += itemTotalCost;
+    
+    //         // Update the displayed item total cost
+    //         const itemTotalCostElement = item.querySelector('.item-total-cost');
+    //         if (itemTotalCostElement) {
+    //             itemTotalCostElement.textContent = itemTotalCost.toLocaleString('vi-VN') + ' đ';
+    //         }
+    //     });
+    
+    //     totalCostElement.textContent = totalCost.toLocaleString('vi-VN') + ' đ';
+    // }
+     
 
     // Handle remove button
     const removeButtons = document.querySelectorAll('.remove-btn');
@@ -114,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify({
                 tickets_info: tickets_info,
-                total_cost: parseFloat(totalCost.replace(/,/g, ''))
+                total_cost: parseFloat(totalCost.replace(/[,.]/g, ''))
             }),
         })
         .then(response => response.json())

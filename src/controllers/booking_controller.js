@@ -6,18 +6,49 @@
 
 const Booking = require('../models/booking_model');
 const Cart = require('../models/cart_model');
+const getPagination = require('../utils/get_pagination_utils');
 
+/**
+ * Render the booked list
+ * @param {object} req - The request object.
+ * @param {object} res - The response object.
+ */
+const renderBookedTickets = async (req, res) => {
+    try {
+        const totalBookedTicket = await Booking.countDocuments({ user_id: req.session.user.user_id });
+        const pagination = getPagination('/', req.params, 15, totalBookedTicket);
+
+        const allBookings = await Booking.find({ user_id: req.session.user.user_id })
+            .populate('tickets.ticket_id')
+            .limit(pagination.limit)
+            .skip(pagination.skip)
+            .exec();        
+        
+        res.render('./pages/booked_tickets', {
+            sessionUser: req.session.user,
+            allBookings,
+            pagination
+        });
+    } catch (error) {
+        console.error('Error rendering booking page: ', error.message);
+        throw error;
+    }
+}
+
+
+/**
+ * Create new booking
+ * @param {object} req - The request object.
+ * @param {object} res - The response object.
+ */
 const addBooking = async (req, res) => {
     try {
+        const userId = req.session.user && req.session.user.user_id ? req.session.user.user_id : '';
+
         const { tickets_info, total_cost } = req.body;
 
-        // const tickets = tickets_info.map((ticket_id, index) => ({
-        //     ticket_id,
-        //     quantity: quantity[index]
-        // }));
-
         const booking = new Booking({
-            user_id: req.session.user.user_id,
+            user_id: userId,
             tickets: tickets_info,
             total_cost,
             status: 'paid'
@@ -28,7 +59,7 @@ const addBooking = async (req, res) => {
         const ticketIds = tickets_info.map(ticket => ticket.ticket_id);
         await Cart.deleteMany({ 
             ticket_id: { $in: ticketIds }, 
-            user_id: req.session.user.user_id 
+            user_id: userId
         });
 
         res.json({ success: true, booking_id: booking._id });
@@ -40,5 +71,6 @@ const addBooking = async (req, res) => {
 
 
 module.exports = {
+    renderBookedTickets,
     addBooking
 } 

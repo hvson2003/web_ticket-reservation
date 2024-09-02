@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.classList.remove('btn-primary');
                     this.classList.add('btn-light');
                     this.disabled = true; 
-                    Snackbar({ message: 'Ticket added to your booking!', type: 'success' });
+                    Snackbar({ message: 'Ticket added to your cart!', type: 'success' });
                 } else {
                     Snackbar({ message: data.error, type: 'error' });
                 }
