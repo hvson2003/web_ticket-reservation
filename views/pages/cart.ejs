@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <%- include('./head', {title: 'Booking List'}) %>
+     <%- include('./head', {title: 'Cart List'}) %>
 </head>
 <body>
      <%- include('../partials/top_app_bar') %>
 
-     <% if (locals.allBookings.length) { %>
-        <% locals.allBookings.forEach(booking => { %>
-            <%- include('../partials/booking_card', { booking }) %>
+     <% if (locals.allCarts.length) { %>
+        <% locals.allCarts.forEach(cart => { %>
+            <%- include('../partials/cart_card', { cart }) %>
         <% }); %>
         <p class="d-grid gap-2 d-md-flex justify-content-md-end me-4 pe-5 pt-3">
             <a href="#" id="purchase-all-btn" class="btn btn-primary">Purchase All</a>
@@ -31,20 +31,20 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <ul id="booking-summary-list" class="list-group">
+                    <ul id="cart-summary-list" class="list-group">
                         <% let totalCost = 0; %>
-                        <% console.log(allBookings);%>
-                        <% locals.allBookings.forEach(booking => { %>
-                            <li class="list-group-item" data-booking-id="<%= booking._id %>">
-                                <%= booking.ticket_id.name %> - 
-                                <%= booking.ticket_id.price.toLocaleString('vi-VN') %> x 
-                                <%= booking.quantity %> = 
-                                <%= (booking.ticket_id.price * booking.quantity).toLocaleString('vi-VN') %> đ
-                                <% totalCost += booking.ticket_id.price * booking.quantity %>
+                        <% locals.allCarts.forEach(cart => { %>
+                            <li class="list-group-item" data-cart-id="<%= cart.ticket_id._id %>">
+                                <%= cart.ticket_id.name %> - 
+                                <%= cart.ticket_id.price.toLocaleString('vi-VN') %> x 
+                                <input type="number" class="form-control quantity-input text-center" value="<%= cart.quantity %>" min="1" style="width: 60px; display: inline-block;" readonly> = 
+                                <%= (cart.ticket_id.price * cart.quantity).toLocaleString('vi-VN') %> đ
+                                <% totalCost += cart.ticket_id.price * cart.quantity; %>
                             </li>
                         <% }); %>
                     </ul>
-                    <p class="text text-primary pt-2 ps-2">Total Cost: <span id="totalCost"><%= totalCost %></span> đ</p>
+                    
+                    <p class="text text-primary pt-2 ps-2">Total Cost: <span id="totalCost"><%= totalCost.toLocaleString('vi-VN') %></span> đ</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -53,8 +53,8 @@
             </div>
         </div>
     </div>
-
+    
     <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/booking.js" type="module"></script>
+    <script src="/js/cart.js" type="module"></script>
 </body>
 </html>

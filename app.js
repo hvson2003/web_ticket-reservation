@@ -16,10 +16,8 @@ const login = require('./src/routes/login_route');
 const logout = require('./src/routes/logout_route');
 const home = require('./src/routes/home_route');
 const ticketAdd = require('./src/routes/ticket_add_route');
-const payment = require('./src/routes/payment_route');
-
-
 const booking = require('./src/routes/booking_route');
+const cart = require('./src/routes/cart_route');
 const { connectDB, disconnectDB } = require('./src/config/mongoose_config');
 
 /**
@@ -71,11 +69,11 @@ app.use('/', home);
 /** ticket page */
 app.use('/tickets', ticketAdd);
 
-/** booking page */
-app.use('/booking', booking);
+/** cart page */
+app.use('/carts', cart);
 
 /** booking page */
-app.use('/payments', payment);
+app.use('/bookings', booking);
 
 /**
  * start server

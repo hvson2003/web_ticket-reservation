@@ -8,7 +8,7 @@
  * custom modules
  */
 const Ticket = require('../models/ticket_model');
-const Booking = require('../models/booking_model');
+const Booking = require('../models/cart_model');
 const getPagination = require('../utils/get_pagination_utils');
 
 /**

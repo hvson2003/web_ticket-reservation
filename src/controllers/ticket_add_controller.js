@@ -1,6 +1,6 @@
 'use strict';
 
-const Booking = require('../models/booking_model');
+const Booking = require('../models/cart_model');
 const Ticket = require('../models/ticket_model');
 
 const addTicket = async (req, res) => {    

@@ -4,83 +4,41 @@
 
 'use strict';
 
-/**
- * custom modules
- */
 const Booking = require('../models/booking_model');
-const getPagination = require('../utils/get_pagination_utils');
+const Cart = require('../models/cart_model');
 
-/**
- * Render the booking page
- * @param {object} req - The request object.
- * @param {object} res - The response object.
- */
-const renderBooking = async (req, res) => {
+const addBooking = async (req, res) => {
     try {
-        const totalBookings = await Booking.countDocuments();
-        const pagination = getPagination('/', req.params, 15, totalBookings);  
+        const { tickets_info, total_cost } = req.body;
 
-        const allBookings = await Booking.find({ user_id: req.session.user.user_id })
-            .populate('ticket_id')
-            .limit(pagination.limit)
-            .skip(pagination.skip);
-        
-        res.render('./pages/booking', {
-            sessionUser: req.session.user,
-            allBookings,
-            pagination
-        }); 
-    } catch (error) {
-        console.error('Error rendering home page: ', error.message);
-        throw error;
-    }
+        // const tickets = tickets_info.map((ticket_id, index) => ({
+        //     ticket_id,
+        //     quantity: quantity[index]
+        // }));
 
-}
+        const booking = new Booking({
+            user_id: req.session.user.user_id,
+            tickets: tickets_info,
+            total_cost,
+            status: 'paid'
+        });
 
-/**
- * Delete booking
- * @param {object} req - The request object.
- * @param {object} res - The response object.
- */
-const removeBooking = async (req, res) => {
-    try {
-        const { id } = req.params;
-        await Booking.findByIdAndDelete(id);
-        res.json({ success: true });
-    } catch (error) {
-        console.error('Error removing booking:', error);
-        res.status(500).json({ success: false, error: 'An error occurred while removing the booking.' });
-    }
-};
-
-
-/**
- * Update quantity booking
- * @param {object} req - The request object.
- * @param {object} res - The response object.
- */
-const updateBookingQuantity = async (req, res) => {    
-    const { bookingId } = req.params;
-    const { quantity } = req.body;
-
-    try {
-        const booking = await Booking.findById(bookingId);
-        if (!booking) {
-            return res.status(404).json({ error: 'Booking not found' });
-        }
-
-        booking.quantity = quantity;
         await booking.save();
 
-        res.json({ success: true });
+        const ticketIds = tickets_info.map(ticket => ticket.ticket_id);
+        await Cart.deleteMany({ 
+            ticket_id: { $in: ticketIds }, 
+            user_id: req.session.user.user_id 
+        });
+
+        res.json({ success: true, booking_id: booking._id });
     } catch (error) {
-        console.error('Error updating booking quantity:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Error adding booking:', error);
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 };
 
+
 module.exports = {
-    renderBooking,
-    removeBooking,
-    updateBookingQuantity
+    addBooking
 } 
