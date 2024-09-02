@@ -84,4 +84,35 @@ document.addEventListener('DOMContentLoaded', function () {
     purchaseAllBtn.addEventListener('click', function() {
         purchaseModal.show();
     });
+
+    // Handle confirm payment
+    const confirmPaymentBtn = document.getElementById('confirm-purchase-btn');
+    confirmPaymentBtn.addEventListener('click', function () {
+        const bookingIds = [...document.querySelectorAll('#booking-summary-list li')].map(li => li.getAttribute('data-booking-id'));
+        const totalCost = document.getElementById('totalCost').textContent;
+    
+        fetch('/payments/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                booking_ids: bookingIds,
+                total_cost: parseFloat(totalCost.replace(/,/g, ''))
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Payment successful!');
+                window.location.reload();
+            } else {
+                alert('Payment failed: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again later.');
+        });
+    });
 });

@@ -10,6 +10,9 @@
         <% locals.allBookings.forEach(booking => { %>
             <%- include('../partials/booking_card', { booking }) %>
         <% }); %>
+        <p class="d-grid gap-2 d-md-flex justify-content-md-end me-4 pe-5 pt-3">
+            <a href="#" id="purchase-all-btn" class="btn btn-primary">Purchase All</a>
+        </p>
     <% } else { %>
         <p class="text text-dark ps-5 pt-3">You haven't added any tickets yet.</p>
     <% } %>
@@ -17,10 +20,7 @@
     <% if (locals.pagination.next || locals.pagination.prev) {  %>
         <%- include('../partials/pagination') %>
     <% } %>
-    
-    <p class="d-grid gap-2 d-md-flex justify-content-md-end me-4 pe-5 pt-3">
-        <a href="#" id="purchase-all-btn" class="btn btn-success">Purchase All</a>
-    </p>
+
 
     <!-- Modal -->
     <div class="modal fade" id="purchaseModal" tabindex="-1" aria-labelledby="purchaseModalLabel" aria-hidden="true">
@@ -32,15 +32,19 @@
                 </div>
                 <div class="modal-body">
                     <ul id="booking-summary-list" class="list-group">
+                        <% let totalCost = 0; %>
+                        <% console.log(allBookings);%>
                         <% locals.allBookings.forEach(booking => { %>
-                            <li class="list-group-item">
+                            <li class="list-group-item" data-booking-id="<%= booking._id %>">
                                 <%= booking.ticket_id.name %> - 
                                 <%= booking.ticket_id.price.toLocaleString('vi-VN') %> x 
                                 <%= booking.quantity %> = 
                                 <%= (booking.ticket_id.price * booking.quantity).toLocaleString('vi-VN') %> đ
+                                <% totalCost += booking.ticket_id.price * booking.quantity %>
                             </li>
                         <% }); %>
                     </ul>
+                    <p class="text text-primary pt-2 ps-2">Total Cost: <span id="totalCost"><%= totalCost %></span> đ</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
