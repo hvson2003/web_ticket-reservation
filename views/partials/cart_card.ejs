@@ -1,0 +1,30 @@
+<% 
+    const cart = locals.cart || {};
+    const ticket = cart.ticket_id || {};
+%>
+
+<div class="cart card mx-5 mb-3">
+    <div class="row g-0">
+        <div class="col-md-4 px-4">
+            <div class="card-body">
+                <h5 class="card-title"><%= ticket.name %></h5>
+                <p class="card-text">
+                    <strong>Cost:</strong> <%= ticket.price.toLocaleString('vi-VN') %> đ
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 px-2 d-flex align-items-center">
+            <p class="card-text mb-0 d-flex align-items-center">
+                <strong class="me-2">Quantity:</strong>
+                <div class="input-group quantity-control" style="max-width: 150px;" data-cart-id="<%= cart._id %>">
+                    <button class="btn btn-outline-secondary decrement-btn" type="button">-</button>
+                    <input type="number" class="form-control quantity-input text-center" value="<%= cart.quantity %>" min="1">
+                    <button class="btn btn-outline-secondary increment-btn" type="button">+</button>
+                </div>
+            </p>
+        </div>
+        <div class="col-md-2 px-2 pt-4">
+            <a href="" class="btn btn-danger remove-btn" data-cart-id="<%= cart._id %>">Remove</a>
+        </div>
+    </div>
+</div>

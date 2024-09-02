@@ -14,25 +14,34 @@ const bookingSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    ticket_id: {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: 'Ticket',
-        required: true
-    },
-    quantity: {
+    tickets: [{
+        _id: false,
+        ticket_id: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'Ticket',
+            required: true
+        },
+        quantity: {
+            type: Number,
+            required: true
+        }
+    }],
+    total_cost: {
         type: Number,
-        required: true,
-        default: 1,
-        min: 1
+        required: true
     },
     booking_time: {
         type: Date,
         default: Date.now
+    },
+    status: { 
+        type: String, 
+        required: true,
+        enum: ['paid', 'cancel'], 
+        default: 'paid' 
     }
 }, {
     timestamps: true
 });
-
-bookingSchema.index({ user_id: 1, ticket_id: 1 }, { unique: true });
 
 module.exports = mongoose.model('Booking', bookingSchema);

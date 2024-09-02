@@ -1,3 +1,14 @@
+/**
+ * @license Apache-2.0
+*/
+
+'use strict';
+
+/**
+ * import module
+ */
+import Snackbar from "./snackbar.js";
+
 document.addEventListener('DOMContentLoaded', function () {
     // Handle increment and decrement button
     const quantityControls = document.querySelectorAll('.quantity-control');
@@ -6,25 +17,27 @@ document.addEventListener('DOMContentLoaded', function () {
         const decrementBtn = control.querySelector('.decrement-btn');
         const incrementBtn = control.querySelector('.increment-btn');
         const quantityInput = control.querySelector('.quantity-input');
-        const bookingId = control.getAttribute('data-booking-id');
+        const cartId = control.getAttribute('data-cart-id');       
 
         decrementBtn.addEventListener('click', function() {
             const currentValue = parseInt(quantityInput.value);
             if (currentValue > parseInt(quantityInput.min)) {
-                quantityInput.value = currentValue - 1;
-                updateQuantity(bookingId, quantityInput.value);
+                quantityInput.value = currentValue - 1;                
+                updateQuantity(cartId, quantityInput.value);
+                updateModal();
             }
         });
 
         incrementBtn.addEventListener('click', function() {
             const currentValue = parseInt(quantityInput.value);
             quantityInput.value = currentValue + 1;            
-            updateQuantity(bookingId, quantityInput.value);
+            updateQuantity(cartId, quantityInput.value);
+            updateModal();
         });
     });
 
-    function updateQuantity(bookingId, quantity) {
-        fetch(`/booking/update/${bookingId}`, {
+    function updateQuantity(cartId, quantity) {
+        fetch(`/carts/update/${cartId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -34,11 +47,11 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
-                console.log('Quantity updated successfully.');
-            } else {
-                console.error('Error updating quantity:', data.error);
-            }
+            // if (data.success) {
+            //     console.log('Quantity updated successfully.');
+            // } else {
+            //     console.error('Error updating quantity:', data.error);
+            // }
         })
         .catch(error => {
             console.error('Error:', error);
@@ -52,10 +65,10 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', async function(e) {
             e.preventDefault();
             
-            const bookingId = button.getAttribute('data-booking-id');
+            const cartId = button.getAttribute('data-cart-id');
 
             try {
-                const response = await fetch(`/booking/remove/${bookingId}`, {
+                const response = await fetch(`/carts/remove/${cartId}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
@@ -65,12 +78,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const result = await response.json();
                 if (response.ok) {
-                    button.closest('.card').remove();
+                    button.closest('.cart').remove();
                 } else {
                     alert(`Error: ${result.error}`);
                 }
             } catch (error) {
-                console.error('Error removing booking:', error);
+                console.error('Error removing cart:', error);
                 alert('An error occurred. Please try again later.');
             }
         });
@@ -88,31 +101,46 @@ document.addEventListener('DOMContentLoaded', function () {
     // Handle confirm payment
     const confirmPaymentBtn = document.getElementById('confirm-purchase-btn');
     confirmPaymentBtn.addEventListener('click', function () {
-        const bookingIds = [...document.querySelectorAll('#booking-summary-list li')].map(li => li.getAttribute('data-booking-id'));
+        const tickets_info = [...document.querySelectorAll('#cart-summary-list li')].map(li => ({
+            ticket_id: li.getAttribute('data-cart-id'),
+            quantity: li.querySelector('.quantity-input').value
+        }));
         const totalCost = document.getElementById('totalCost').textContent;
     
-        fetch('/payments/create', {
+        fetch('/bookings/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                booking_ids: bookingIds,
+                tickets_info: tickets_info,
                 total_cost: parseFloat(totalCost.replace(/,/g, ''))
             }),
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Payment successful!');
+                alert('Payment successful !');
+                // Snackbar({
+                //     message: 'Payment successful !'
+                // });
                 window.location.reload();
             } else {
-                alert('Payment failed: ' + data.error);
+                alert('Payment failed !');
+                // Snackbar({
+                //     type: 'error',
+                //     message: 'Payment failed !'
+                // });
             }
         })
         .catch(error => {
-            console.error('Error:', error);
             alert('An error occurred. Please try again later.');
+
+            // console.error('Error:', error);
+            // Snackbar({
+            //     type: 'error',
+            //     message: 'An error occurred. Please try again later.'
+            // });
         });
     });
 });
