@@ -7,40 +7,39 @@
 ## API Endpoints
 ### **Đăng ký người dùng**
 - **URL:** `/register`
-- **Mô tả:**
+- **Các phương thức:**
   - **GET**: Render trang đăng ký người dùng.
   - **POST**: Xử lý việc gửi biểu mẫu đăng ký.
 
 ### **Đăng nhập**
 - **URL:** `/login`
-- **Mô tả:**
+- **Các phương thức:**
   - **GET**: Render trang đăng nhập.
   - **POST**: Xử lý việc gửi biểu mẫu đăng nhập.
 
 ### **Đăng xuất**
 - **URL:** `/logout`
-- **Mô tả:** **POST**: Xử lý yêu cầu đăng xuất của người dùng, xóa session.
+- **Các phương thức:** **POST**: Xử lý yêu cầu đăng xuất của người dùng, xóa session.
 
 ### **Trang quản trị (Admin)**
 - **URL:** `/admin`
-- **Phương thức:** `GET` / `POST`
-- **Mô tả:**
+- **Các phương thức:**
   - **GET**: Render trang quản trị để thêm vé.
   - **POST**: Xử lý việc tạo vé mới.
 
 ### **Trang chính (Home)**
 - **URL:** `/`
-- **Mô tả:**
+- **Các phương thức:**
   - **GET**: Render trang chính của ứng dụng.
 
 ### **Trang giỏ hàng**
 - **URL:** `/tickets`
-- **Mô tả:**
+- **Các phương thức:**
   - **POST**: Xử lý yêu cầu thêm vé mới vào giỏ.
 
 ### **Trang vé đã đặt**
 - **URL:** `/bookings`
-- **Mô tả:**
+- **Các phương thức:**
   - **GET**: Render trang hiển thị danh sách các vé đã đặt.
   - **POST**: Thực hiện chấp nhận thanh toán giỏ hàng.
   - **POST** `/bookings/:id/cancel`: Hủy một đặt vé.
