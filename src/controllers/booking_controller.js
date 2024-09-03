@@ -6,6 +6,7 @@
 
 const Booking = require('../models/booking_model');
 const Cart = require('../models/cart_model');
+const Ticket = require('../models/ticket_model');
 const getPagination = require('../utils/get_pagination_utils');
 
 /**
@@ -63,15 +64,48 @@ const addBooking = async (req, res) => {
             user_id: userId
         });
 
-        res.json({ success: true, booking_id: booking._id });
+        res.sendStatus(200);
     } catch (error) {
         console.error('Error adding booking:', error);
-        res.status(500).json({ success: false, error: 'Internal server error' });
+        throw error;
     }
 };
 
 
+const cancelBooking = async (req, res) => {
+    try {
+        const bookingId = req.params.id ? req.params.id : '';
+
+        const booking = await Booking.findByIdAndUpdate(
+            bookingId,
+            { status: 'cancel' },
+            { new: true }
+        );
+
+        if (!booking) {
+            return res.status(404).json({ message: 'Booking not found' });
+        }
+
+        for (const ticket of booking.tickets) {
+            await Ticket.findByIdAndUpdate(ticket.ticket_id, {
+                $inc: { remaining_quantity: ticket.quantity }
+            });
+        }
+
+        const refundAmount = booking.total_cost * 0.90;
+
+        // Ở đây bạn có thể gửi thông báo hoặc thực hiện các bước cần thiết khác
+
+        res.sendStatus(200);
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+
+};
+
 module.exports = {
     renderBookedTickets,
-    addBooking
+    addBooking,
+    cancelBooking
 } 

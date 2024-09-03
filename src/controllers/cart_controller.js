@@ -42,7 +42,7 @@ const renderCart = async (req, res) => {
 }
 
 /**
- * delete cart
+ * Delete cart
  * @param {object} req - The request object.
  * @param {object} res - The response object.
  */
@@ -50,10 +50,11 @@ const removeCart = async (req, res) => {
     try {
         const { id } = req.params;
         await Cart.findByIdAndDelete(id);
-        res.json({ success: true });
+
+        res.sendStatus(200);
     } catch (error) {
         console.error('Error removing cart:', error);
-        res.status(500).json({ success: false, error: 'An error occurred while removing the cart.' });
+        throw error;
     }
 };
 
@@ -70,16 +71,16 @@ const updateCartQuantity = async (req, res) => {
     try {
         const cart = await Cart.findById(cartId);
         if (!cart) {
-            return res.status(404).json({ error: 'Cart not found' });
+            return res.status(404).json({ message: 'Cart not found' });
         }
 
         cart.quantity = quantity;
         await cart.save();
 
-        res.json({ success: true });
+        res.sendStatus(200);
     } catch (error) {
         console.error('Error updating cart quantity:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        throw error;
     }
 };
 

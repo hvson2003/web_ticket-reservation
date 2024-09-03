@@ -36,10 +36,10 @@ const addTicket = async (req, res) => {
         ticket.remaining_quantity -= 1;
         await ticket.save();
 
-        res.json({ success: true });
+        res.sendStatus(200);
     } catch (error) {
         console.error('Error adding ticket to booking:', error);
-        res.status(500).json({ message: 'An error occurred. Please try again later.' });
+        throw error;
     }
 };
 

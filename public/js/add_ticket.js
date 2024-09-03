@@ -13,10 +13,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const addTicketButtons = document.querySelectorAll('.add-ticket-btn');
 
     addTicketButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', async function() {
             const ticketId = this.getAttribute('data-ticket-id');
 
-            fetch(`/tickets/${ticketId}/add`, {
+            const response = await fetch(`/tickets/${ticketId}/add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -24,23 +24,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({ 
                     ticket_id: ticketId
                 }),
-            })            
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    this.textContent = 'Booked'; 
-                    this.classList.remove('btn-primary');
-                    this.classList.add('btn-light');
-                    this.disabled = true; 
-                    Snackbar({ message: 'Ticket added to your cart!', type: 'success' });
-                } else {
-                    Snackbar({ message: data.error, type: 'error' });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Snackbar({ message: 'An error occurred. Please try again later.', type: 'error' });
-            });
+            })    
+            
+            if (response.ok) {
+                this.textContent = 'Booked'; 
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-light');
+                this.disabled = true; 
+                Snackbar({ message: 'Ticket added to your cart!'});
+            }
+
+            if (response.status === 400) {
+                const { message } = await response.json();
+                Snackbar({ type: 'error', message });            
+            }
         });
     });
 });

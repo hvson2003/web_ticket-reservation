@@ -17,6 +17,31 @@
     <% if (pagination.next || pagination.prev) {  %>
         <%- include('../partials/pagination') %>
     <% } %>
+
+    
+    <!-- Modal -->
+    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelModalLabel">Confirm Cancellation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to cancel this booking? You will be refunded 90% of the total cost.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="confirmCancel">Cancel Booking</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--
+        #SNACKBAR
+    -->
+    <div class="snackbar-wrapper" data-snackbar-wrapper></div>
   
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/booking.js" type="module"></script>
