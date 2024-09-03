@@ -7,7 +7,7 @@
 const cron = require('node-cron');
 const Cart = require('../models/cart_model');
 
-cron.schedule('* * * * *', async () => {
+cron.schedule('*/5 * * * *', async () => {
     const now = new Date();
     const expiryTime = new Date(now.getTime() - 5 * 60 * 1000); // 5 minutes
 
