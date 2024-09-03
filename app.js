@@ -21,6 +21,13 @@ const cart = require('./src/routes/cart_route');
 const admin = require('./src/routes/admin_route');
 const { connectDB, disconnectDB } = require('./src/config/mongoose_config');
 
+
+/**
+ * schedule module
+ */
+const cronJobs = require('./src/utils/corn_job');
+
+
 /**
  * initial express
  */

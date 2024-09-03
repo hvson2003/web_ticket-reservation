@@ -22,7 +22,9 @@ const renderCart = async (req, res) => {
         const totalCards = await Cart.countDocuments();
         const pagination = getPagination('/', req.params, 15, totalCards);  
 
-        const allCarts = await Cart.find({ user_id: userId })
+        const allCarts = await Cart.find({
+                user_id: userId,
+            })
             .populate('ticket_id')
             .sort({ updatedAt: 'desc' })
             .limit(pagination.limit)

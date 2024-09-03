@@ -29,7 +29,6 @@ const addTicket = async (req, res) => {
         const newBooking = new Booking({
             ticket_id: ticketId,
             user_id: userId,
-            status: 'pending'
         });
 
         await newBooking.save();
