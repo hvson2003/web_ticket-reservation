@@ -6,10 +6,10 @@
         total_cost,
         status,
         booking_time,
-    } = locals.booking || {};    
+    } = locals.booking || {};            
 %>
 
-<div class="cart card mx-5 mb-3" data-booking-id="<% _id %>">
+<div class="cart card mx-5 mb-3" data-booking-id="<%= _id %>">
     <div class="row g-0">
         <div class="card-header">
             <h4 class="">Booking Information</h4>
@@ -42,7 +42,7 @@
         </div>
         <% if (status === 'paid') { %>
             <div class="col-md-2 px-2 pt-4">
-                <a href="" class="btn btn-danger" data-ticket-id="<%= booking._id %>">Cancel</a>
+                <a href="" class="btn btn-danger cancel-booking" data-booking-id="<%= booking._id %>">Cancel</a>
             </div>
         <% } else { %>
             <div class="col-md-2 px-2 pt-4">

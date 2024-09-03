@@ -64,23 +64,20 @@ document.addEventListener('DOMContentLoaded', function () {
             
             const cartId = button.getAttribute('data-cart-id');
 
-            try {
-                const response = await fetch(`/carts/remove/${cartId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                });
 
-                const result = await response.json();
-                if (response.ok) {
-                    button.closest('.cart').remove();
-                } else {
-                    console.error(`Error: ${result.error}`);
+            const response = await fetch(`/carts/remove/${cartId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
-            } catch (error) {
-                console.error(`Error removing cart: ${error}`);
+            });
+
+            if (response.ok) {
+                button.closest('.cart').remove();
+            } else {
+                const { message } = await response.json();
+                Snackbar({ type: 'error', message });
             }
         });
     });
@@ -114,12 +111,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }),
             });
 
-            const data = await response.json();
-            if (data.success) {
-                alert('Payment successful !');
-                window.location.reload();
+            if (response.ok) {
+                Snackbar({ message: 'Payment successful !' });
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1000); 
             } else {
-                alert('Payment failed !');
+                Snackbar({ message: 'Payment fail !' });
             }
         } catch (error) {
             alert('An error occurred. Please try again later.');
