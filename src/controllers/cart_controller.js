@@ -24,6 +24,7 @@ const renderCart = async (req, res) => {
 
         const allCarts = await Cart.find({ user_id: userId })
             .populate('ticket_id')
+            .sort({ updatedAt: 'desc' })
             .limit(pagination.limit)
             .skip(pagination.skip);
         

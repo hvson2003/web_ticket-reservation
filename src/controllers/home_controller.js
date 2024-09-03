@@ -16,7 +16,7 @@ const getPagination = require('../utils/get_pagination_utils');
  * @param {object} req - The request object.
  * @param {object} res - The response object.
  */
-const renderTicket = async (req, res) => {
+const renderHome = async (req, res) => {
     try {
         const userId = req.session.user && req.session.user.user_id ? req.session.user.user_id : '';
 
@@ -60,6 +60,6 @@ const checkIfTicketBooked = async (userId, ticketId) => {
 };
 
 module.exports = {
-    renderTicket,
+    renderHome,
     checkIfTicketBooked
 } 

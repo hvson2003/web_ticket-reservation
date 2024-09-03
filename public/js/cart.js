@@ -1,6 +1,6 @@
 /**
  * @license Apache-2.0
-*/
+ */
 
 'use strict';
 
@@ -10,9 +10,9 @@
 import Snackbar from "./snackbar.js";
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Handle increment and decrement button
     const quantityControls = document.querySelectorAll('.quantity-control');
 
+    // Handle increment and decrement button
     quantityControls.forEach(control => {
         const decrementBtn = control.querySelector('.decrement-btn');
         const incrementBtn = control.querySelector('.increment-btn');
@@ -36,51 +36,25 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    function updateQuantity(cartId, quantity) {
-        fetch(`/carts/update/${cartId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: JSON.stringify({ quantity })
-        })
-        .then(response => response.json())
-        .then(data => {
-            // if (data.success) {
-            //     console.log('Quantity updated successfully.');
-            // } else {
-            //     console.error('Error updating quantity:', data.error);
-            // }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
+    async function updateQuantity(cartId, quantity) {
+        try {
+            const response = await fetch(`/carts/update/${cartId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ quantity })
+            });
 
-    // function updateModal() {
-    //     const cartSummaryList = document.querySelector('#cart-summary-list');
-    //     const totalCostElement = document.getElementById('totalCost');
-    //     let totalCost = 0;
-    
-    //     const cartItems = cartSummaryList.querySelectorAll('li');
-    
-    //     cartItems.forEach(item => {
-    //         const price = parseFloat(item.querySelector('.quantity-input').getAttribute('data-price'));
-    //         const quantity = parseInt(item.querySelector('.quantity-input').value);
-    //         const itemTotalCost = price * quantity;
-    //         totalCost += itemTotalCost;
-    
-    //         // Update the displayed item total cost
-    //         const itemTotalCostElement = item.querySelector('.item-total-cost');
-    //         if (itemTotalCostElement) {
-    //             itemTotalCostElement.textContent = itemTotalCost.toLocaleString('vi-VN') + ' đ';
-    //         }
-    //     });
-    
-    //     totalCostElement.textContent = totalCost.toLocaleString('vi-VN') + ' đ';
-    // }
-     
+            const data = await response.json();
+            if (!response.ok) {
+                console.error('Error updating quantity:', data.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     // Handle remove button
     const removeButtons = document.querySelectorAll('.remove-btn');
@@ -103,15 +77,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (response.ok) {
                     button.closest('.cart').remove();
                 } else {
-                    alert(`Error: ${result.error}`);
+                    console.error(`Error: ${result.error}`);
                 }
             } catch (error) {
-                console.error('Error removing cart:', error);
-                alert('An error occurred. Please try again later.');
+                console.error(`Error removing cart: ${error}`);
             }
         });
     });
-
 
     // Handle purchase button
     const purchaseAllBtn = document.getElementById('purchase-all-btn');
@@ -123,47 +95,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Handle confirm payment
     const confirmPaymentBtn = document.getElementById('confirm-purchase-btn');
-    confirmPaymentBtn.addEventListener('click', function () {
+    confirmPaymentBtn.addEventListener('click', async function () {
         const tickets_info = [...document.querySelectorAll('#cart-summary-list li')].map(li => ({
             ticket_id: li.getAttribute('data-cart-id'),
             quantity: li.querySelector('.quantity-input').value
         }));
         const totalCost = document.getElementById('totalCost').textContent;
     
-        fetch('/bookings/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                tickets_info: tickets_info,
-                total_cost: parseFloat(totalCost.replace(/[,.]/g, ''))
-            }),
-        })
-        .then(response => response.json())
-        .then(data => {
+        try {
+            const response = await fetch('/bookings/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tickets_info: tickets_info,
+                    total_cost: parseFloat(totalCost.replace(/[,.]/g, ''))
+                }),
+            });
+
+            const data = await response.json();
             if (data.success) {
                 alert('Payment successful !');
-                // Snackbar({
-                //     message: 'Payment successful !'
-                // });
                 window.location.reload();
             } else {
                 alert('Payment failed !');
-                // Snackbar({
-                //     type: 'error',
-                //     message: 'Payment failed !'
-                // });
             }
-        })
-        .catch(error => {
+        } catch (error) {
             alert('An error occurred. Please try again later.');
-
-            // console.error('Error:', error);
-            // Snackbar({
-            //     type: 'error',
-            //     message: 'An error occurred. Please try again later.'
-            // });
-        });
+            console.error('Error:', error);
+        }
     });
 });

@@ -12,8 +12,8 @@ const router = require('express').Router();
 /**
  * custome modules
  */
-const { renderTicket } = require('../controllers/home_controller');
+const { renderHome } = require('../controllers/home_controller');
 
-router.get('/', renderTicket);
+router.get('/', renderHome);
 
 module.exports = router;
