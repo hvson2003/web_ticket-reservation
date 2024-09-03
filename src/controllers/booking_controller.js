@@ -20,6 +20,7 @@ const renderBookedTickets = async (req, res) => {
 
         const allBookings = await Booking.find({ user_id: req.session.user.user_id })
             .populate('tickets.ticket_id')
+            .sort({ updatedAt: 'desc' })
             .limit(pagination.limit)
             .skip(pagination.skip)
             .exec();        

@@ -9,21 +9,21 @@ const addTicket = async (req, res) => {
         const userId = req.session.user.user_id;
 
         if (!ticketId || !userId) {
-            return res.status(400).json({ success: false, error: 'Invalid request parameters.' });
+            return res.status(400).json({ message: 'Invalid request parameters.' });
         }
 
         const existingBooking = await Booking.findOne({ ticket_id: ticketId, user_id: userId });
         if (existingBooking) {
-            return res.status(400).json({ success: false, error: 'Ticket already added to your booking.' });
+            return res.status(400).json({ message: 'Ticket already added to your booking.' });
         }
 
         const ticket = await Ticket.findById(ticketId);
         if (!ticket) {
-            return res.status(404).json({ success: false, error: 'Ticket not found.' });
+            return res.status(404).json({ message: 'Ticket not found.' });
         }
 
         if (ticket.remaining_quantity <= 0) {
-            return res.status(400).json({ success: false, error: 'No tickets available.' });
+            return res.status(400).json({ message: 'No tickets available.' });
         }
 
         const newBooking = new Booking({
@@ -40,7 +40,7 @@ const addTicket = async (req, res) => {
         res.json({ success: true });
     } catch (error) {
         console.error('Error adding ticket to booking:', error);
-        res.status(500).json({ success: false, error: 'An error occurred. Please try again later.' });
+        res.status(500).json({ message: 'An error occurred. Please try again later.' });
     }
 };
 
