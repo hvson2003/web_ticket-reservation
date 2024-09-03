@@ -24,18 +24,24 @@ const renderHome = async (req, res) => {
         const pagination = getPagination('/', req.params, 15, totalTickets); 
 
         const allTickets = await Ticket.find()
-        .select('id name price remaining_quantity status')
-        .limit(pagination.limit)
-        .skip(pagination.skip);
+            .select('id name price remaining_quantity status')
+            .limit(pagination.limit)
+            .skip(pagination.skip);
         
-        const allTicketsWithBookingStatus = await Promise.all(allTickets.map(async (ticket) => {
-            const isBooked = await checkIfTicketBooked(userId, ticket._id);
-            return {
-                ...ticket._doc,
-                isBooked
-            };
-        }));
-        
+        let allTicketsWithBookingStatus;
+
+        if (userId) {
+            allTicketsWithBookingStatus = await Promise.all(allTickets.map(async (ticket) => {
+                const isBooked = await checkIfTicketBooked(userId, ticket._id);
+                return {
+                    ...ticket._doc,
+                    isBooked
+                };
+            }));
+        } else {
+            allTicketsWithBookingStatus = allTickets;
+        }
+
         res.render('./pages/home', {
             sessionUser: req.session.user,
             allTickets: allTicketsWithBookingStatus,
@@ -45,8 +51,8 @@ const renderHome = async (req, res) => {
         console.error('Error rendering home page: ', error.message);
         throw error;
     }
+};
 
-}
 
 const checkIfTicketBooked = async (userId, ticketId) => {
     try {

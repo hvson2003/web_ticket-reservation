@@ -18,7 +18,12 @@ const getPagination = require('../utils/get_pagination_utils');
 const renderCart = async (req, res) => {
     try {
         const userId = req.session.user && req.session.user.user_id ? req.session.user.user_id : '';
-
+        
+        if (!userId) {
+            console.error("User ID is missing or invalid");
+            return res.status(400).json({ error: "User ID is missing or invalid" });
+        }
+        
         const totalCards = await Cart.countDocuments();
         const pagination = getPagination('/', req.params, 15, totalCards);  
 
