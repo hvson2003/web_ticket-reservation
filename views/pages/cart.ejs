@@ -10,9 +10,11 @@
         <% locals.allCarts.forEach(cart => { %>
             <%- include('../partials/cart_card', { cart }) %>
         <% }); %>
-        <p class="d-grid gap-2 d-md-flex justify-content-md-end me-4 pe-5 pt-3">
-            <a href="#" id="purchase-all-btn" class="btn btn-primary">Purchase All</a>
-        </p>
+        <form action="" method="post">
+            <p class="d-grid gap-2 d-md-flex justify-content-md-end me-4 pe-5 pt-3">
+                <input id="make-payment-btn" class="btn btn-success" type="submit" value="Proceed To Check Out">
+            </p>
+        </form>        
     <% } else { %>
         <p class="text text-dark ps-5 pt-3">You haven't added any tickets yet.</p>
     <% } %>
@@ -20,39 +22,6 @@
     <% if (locals.pagination.next || locals.pagination.prev) {  %>
         <%- include('../partials/pagination') %>
     <% } %>
-
-
-    <!-- Modal -->
-    <div class="modal fade" id="purchaseModal" tabindex="-1" aria-labelledby="purchaseModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="purchaseModalLabel">Order Summary</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <ul id="cart-summary-list" class="list-group">
-                        <% let totalCost = 0; %>
-                        <% locals.allCarts.forEach(cart => { %>
-                            <li class="list-group-item" data-cart-id="<%= cart.ticket_id._id %>">
-                                <%= cart.ticket_id.name %> - 
-                                <%= cart.ticket_id.price.toLocaleString('vi-VN') %> x 
-                                <input type="number" class="form-control quantity-input text-center" data-price="<%= cart.ticket_id.price %>" value="<%= cart.quantity %>" min="1" style="width: 60px; display: inline-block;" readonly> = 
-                                <span class="item-total-cost"><%= (cart.ticket_id.price * cart.quantity).toLocaleString('vi-VN') %> đ</span>
-                                <% totalCost += cart.ticket_id.price * cart.quantity; %>
-                            </li>
-                        <% }); %>
-                    </ul>
-                    
-                    <p class="text text-primary pt-2 ps-2">Total Cost: <span id="totalCost"><%= totalCost.toLocaleString('vi-VN') %></span> đ</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="confirm-purchase-btn" class="btn btn-primary">Confirm Purchase</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!--
         #SNACKBAR
