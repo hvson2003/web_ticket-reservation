@@ -64,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function () {
             
             const cartId = button.getAttribute('data-cart-id');
 
-
             const response = await fetch(`/carts/remove/${cartId}`, {
                 method: 'DELETE',
                 headers: {
@@ -82,46 +81,39 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+
     // Handle purchase button
-    const purchaseAllBtn = document.getElementById('purchase-all-btn');
-    const purchaseModal = new bootstrap.Modal(document.getElementById('purchaseModal'));
-
-    purchaseAllBtn.addEventListener('click', function() {
-        purchaseModal.show();
-    });
-
-    // Handle confirm payment
-    const confirmPaymentBtn = document.getElementById('confirm-purchase-btn');
-    confirmPaymentBtn.addEventListener('click', async function () {
-        const tickets_info = [...document.querySelectorAll('#cart-summary-list li')].map(li => ({
-            ticket_id: li.getAttribute('data-cart-id'),
-            quantity: li.querySelector('.quantity-input').value
-        }));
-        const totalCost = document.getElementById('totalCost').textContent;
+    const makePaymentBtn = document.getElementById('make-payment-btn');
+    makePaymentBtn.addEventListener('click', function(e) {
+        e.preventDefault();
     
-        try {
-            const response = await fetch('/bookings/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    tickets_info: tickets_info,
-                    total_cost: parseFloat(totalCost.replace(/[,.]/g, ''))
-                }),
-            });
+        const tickets_info = [];
+        document.querySelectorAll('#cart-summary-list li').forEach(item => {
+            const ticket_id = item.getAttribute('data-cart-id');
+            const quantity = item.querySelector('.quantity-input').value;
+            const price = item.querySelector('.quantity-input').getAttribute('data-price');
+            const name = item.textContent.trim().split(' - ')[0];
 
-            if (response.ok) {
-                Snackbar({ message: 'Payment successful !' });
-                setTimeout(() => {
-                    window.location.reload()
-                }, 1000); 
-            } else {
-                Snackbar({ message: 'Payment fail !' });
-            }
-        } catch (error) {
-            alert('An error occurred. Please try again later.');
-            console.error('Error:', error);
-        }
+            tickets_info.push({
+                ticket_id,
+                name,
+                price: parseFloat(price),
+                quantity: parseInt(quantity),
+            });
+        });
+    
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/bookings/checkout';
+    
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'tickets_info';
+        input.value = JSON.stringify(tickets_info);
+    
+        form.appendChild(input);
+        document.body.appendChild(form);
+    
+        form.submit(); 
     });
 });

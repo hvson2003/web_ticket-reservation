@@ -12,17 +12,25 @@ const router = require('express').Router();
 /**
  * custome modules
  */
-const { renderBookedTickets, addBooking, cancelBooking } = require('../controllers/booking_controller');
+const { renderBookedTickets, addBooking, cancelBooking, renderCheckout, handleCheckout, cancelCheckout } = require('../controllers/booking_controller');
 
-// Route render booked ticket page
+// Route to render the page showing booked tickets
 router.get('/', renderBookedTickets);
 
-// Route add booking
+// Route to create a new booking
 router.post('/create', addBooking);
 
-// Route cancel booking
+// Route to cancel a booking by its ID
 router.post('/:id/cancel', cancelBooking);
 
+// Route to render the checkout page
+router.post('/checkout', renderCheckout);
+
+// Route to handle successful checkout
+router.get('/checkout/success', handleCheckout);
+
+// Route to render the page for canceled checkout
+router.get('/checkout/cancel', cancelCheckout);
 
 module.exports = router;
 
