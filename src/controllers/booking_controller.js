@@ -57,7 +57,7 @@ const cancelBooking = async (req, res) => {
             });
         }
 
-        const refundAmount = booking.total_cost * 0.90 * 100;
+        const refundAmount = booking.total_cost * 0.90;
 
         if (booking.payment_intent_id) {
             await stripe.refunds.create({
