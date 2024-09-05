@@ -17,9 +17,6 @@ const { renderBookedTickets, addBooking, cancelBooking, renderCheckout, handleCh
 // Route to render the page showing booked tickets
 router.get('/', renderBookedTickets);
 
-// Route to create a new booking
-router.post('/create', addBooking);
-
 // Route to cancel a booking by its ID
 router.post('/:id/cancel', cancelBooking);
 

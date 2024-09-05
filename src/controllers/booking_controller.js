@@ -21,12 +21,11 @@ const renderBookedTickets = async (req, res) => {
         const pagination = getPagination('/', req.params, 15, totalBookedTicket);
 
         const allBookings = await Booking.find({ user_id: req.session.user.user_id })
-            .populate('tickets.ticket_id')
-            .sort({ updatedAt: 'desc' })
-            .limit(pagination.limit)
-            .skip(pagination.skip)
-            .exec();        
-        
+        .populate('tickets.ticket_id')
+        .sort({ updatedAt: 'desc' })
+        .limit(pagination.limit)
+        .skip(pagination.skip);        
+
         res.render('./pages/booked_tickets', {
             sessionUser: req.session.user,
             allBookings,
@@ -37,50 +36,6 @@ const renderBookedTickets = async (req, res) => {
         throw error;
     }
 }
-
-
-/**
- * Create new booking
- * @param {object} req - The request object.
- * @param {object} res - The response object.
- */
-const addBooking = async (req, res) => {
-    try {
-        const userId = req.session.user && req.session.user.user_id ? req.session.user.user_id : '';
-        const { tickets_info, total_cost } = req.body;
-
-        // Tạo các line_items từ tickets_info
-        const line_items = tickets_info.map(ticket => ({
-            price_data: {
-                currency: 'usd',
-                product_data: {
-                    name: ticket.name,
-                },
-                unit_amount: ticket.price * 100,  // Giá vé
-            },
-            quantity: ticket.quantity,
-        }));
-
-        // Tạo phiên thanh toán với Stripe
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items,
-            mode: 'payment',
-            success_url: `${process.env.BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}&user_id=${userId}`,
-            cancel_url: `${process.env.BASE_URL}/cancel`,
-        });
-
-        // Chuyển hướng người dùng đến phiên thanh toán của Stripe
-        res.redirect(session.url);
-
-        // Phần này sẽ được xử lý sau khi thanh toán thành công tại endpoint /success
-    } catch (error) {
-        console.error('Error creating Stripe session:', error);
-        res.status(500).send('Error creating payment session');
-    }
-};
-
-
 
 const cancelBooking = async (req, res) => {
     try {
@@ -196,7 +151,6 @@ const cancelCheckout = async (req, res) => {
 
 module.exports = {
     renderBookedTickets,
-    addBooking,
     cancelBooking,
     renderCheckout,
     handleCheckout,
