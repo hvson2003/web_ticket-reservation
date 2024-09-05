@@ -1,8 +1,17 @@
 # Ticket Reservation System
 
 ## Link demo: [Ticket Reservation](https://web-ticket-reservation-system.onrender.com)
-  - Email: test@gmail.com
-  - Password: 1234
+Thông tin đăng nhập nhanh:
+- Email: test@gmail.com
+- Password: 1234
+- Email: test2@gmail.com
+- Password: 1234
+
+Thông tin để test phần thanh toán (Stripe sandbox):
+- Số thẻ: 4242 4242 4242 4242
+- Ngày hết hạn: 01/26 (hoặc bất kỳ ngày hợp lệ nào)
+- Số CVC: 123
+
 
 ## API Endpoints
 ### **Đăng ký người dùng**
