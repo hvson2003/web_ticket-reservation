@@ -81,7 +81,7 @@ const renderCheckout = async (req, res) => {
             payment_method_types: ['card'],
             line_items: tickets_info.map(ticket => ({
                 price_data: {
-                    currency: 'usd',
+                    currency: 'vnd',
                     product_data: { name: ticket.name },
                     unit_amount: ticket.price * 100,
                 },
