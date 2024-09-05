@@ -57,10 +57,15 @@ const cancelBooking = async (req, res) => {
             });
         }
 
-        const refundAmount = booking.total_cost * 0.90;
+        const refundAmount = booking.total_cost * 0.90 * 100;
 
-        // Ở đây bạn có thể gửi thông báo hoặc thực hiện các bước cần thiết khác
-
+        if (booking.payment_intent_id) {
+            await stripe.refunds.create({
+                payment_intent: booking.payment_intent_id,
+                amount: refundAmount,
+                reason: 'requested_by_customer',
+            });
+        }
         res.sendStatus(200);
     } catch (error) {
         console.error('Error:', error);
@@ -83,7 +88,7 @@ const renderCheckout = async (req, res) => {
                 price_data: {
                     currency: 'vnd',
                     product_data: { name: ticket.name },
-                    unit_amount: ticket.price * 100,
+                    unit_amount: ticket.price,
                 },
                 quantity: ticket.quantity,
             })),
@@ -95,7 +100,7 @@ const renderCheckout = async (req, res) => {
                 tickets_info: JSON.stringify(tickets_info),
                 total_cost: total_cost.toString()
             }
-        });
+        });+
 
         res.redirect(session.url);
     } catch (error) {
@@ -122,7 +127,8 @@ const handleCheckout = async (req, res) => {
             user_id: userId,
             tickets: tickets_info,
             total_cost,
-            status: 'paid'
+            status: 'paid',
+            payment_intent_id: session.payment_intent
         });
 
         await booking.save();

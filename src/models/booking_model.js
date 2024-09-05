@@ -39,6 +39,10 @@ const bookingSchema = new mongoose.Schema({
         required: true,
         enum: ['paid', 'cancel'], 
         default: 'paid' 
+    },
+    payment_intent_id: {
+        type: String,
+        required: false
     }
 }, {
     timestamps: true
