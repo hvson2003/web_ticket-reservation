@@ -61,14 +61,19 @@ Thông tin để test phần thanh toán (Stripe sandbox):
   - **GET** `/bookings/checkout/cancel`: Xử lý hủy thanh toán và hiển thị trang không thành công.
     
 
-## Công nghệ đã sử dụng:
-- **HTML**: Cấu trúc các trang web
-- **CSS**: Tạo kiểu cho ứng dụng
-- **JavaScript**: Thêm hành vi động
-- **Node.js**: Viết kịch bản phía máy chủ
-- **Express.js**: Xây dựng máy chủ và xử lý các tuyến (router)
-- **MongoDB**: Quản lý cơ sở dữ liệu
-- **EJS**: Công cụ tạo template cho phép nhúng JS vào HTML
+## Công nghệ đã sử dụng
+
+- **HTML**: Xây dựng cấu trúc cho các trang web.
+- **CSS**: Tạo kiểu dáng cho ứng dụng.
+- **JavaScript**: Thêm tính năng động cho các phần tử trên trang.
+- **Node.js**: Viết mã phía máy chủ để xử lý logic ứng dụng.
+- **Express.js**: Xây dựng máy chủ và quản lý các tuyến đường (routes).
+- **MongoDB**: Quản lý cơ sở dữ liệu NoSQL.
+- **EJS**: Công cụ template giúp nhúng JavaScript vào HTML.
+- **Bootstrap**: Thư viện CSS để tạo giao diện responsive và hiện đại.
+- **Mongoose**: ODM (Object Data Modeling) cho MongoDB trong Node.js.
+- **Stripe API**: Xử lý thanh toán trực tuyến.
+- **Node-cron**: Thiết lập và quản lý các công việc tự động (cron jobs) như hủy các đặt vé không thanh toán sau một khoảng thời gian.
 
 ## Các chức năng của hệ thống đặt vé:
 - **Hiển thị danh sách vé**:
