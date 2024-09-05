@@ -41,9 +41,16 @@
 - **URL:** `/bookings`
 - **Các phương thức:**
   - **GET**: Render trang hiển thị danh sách các vé đã đặt.
-  - **POST**: Thực hiện chấp nhận thanh toán giỏ hàng.
-  - **POST** `/bookings/:id/cancel`: Hủy một đặt vé.
+  - **POST**: Xử lý việc thanh toán giỏ hàng.
+  - **POST** `/bookings/:id/cancel`: Hủy một đặt vé và trả 90% tiền cho khách hàng.
 
+### **Thanh toán**
+- **URL:** `/bookings/checkout`
+- **Các phương thức:**
+  - **POST**: Render trang thanh toán.
+  - **GET** `/bookings/checkout/success`: Xử lý thành công thanh toán và hiển thị trang thành công.
+  - **GET** `/bookings/checkout/cancel`: Xử lý hủy thanh toán và hiển thị trang không thành công.
+    
 
 ## Công nghệ đã sử dụng:
 - **HTML**: Cấu trúc các trang web
