@@ -8,6 +8,8 @@
  * custom modules
  */
 const Cart = require('../models/cart_model');
+const Ticket = require('../models/ticket_model');
+
 const getPagination = require('../utils/get_pagination_utils');
 
 /**
@@ -54,12 +56,54 @@ const renderCart = async (req, res) => {
 const removeCart = async (req, res) => {
     try {
         const { id } = req.params;
+    
+        const cart = await Cart.findById(id);
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+    
+        const ticket = await Ticket.findById(cart.ticket_id);
+        if (!ticket) {
+            return res.status(404).json({ message: 'Ticket not found' });
+        }
+    
         await Cart.findByIdAndDelete(id);
-
+    
+        ticket.remaining_quantity += 1;
+        await ticket.save();
+    
         res.sendStatus(200);
     } catch (error) {
         console.error('Error removing cart:', error);
-        throw error;
+        res.status(500).json({ message: 'Server error' });
+    }
+    
+};
+
+/**
+ * Check ticket availability
+ * @param {object} req - The request object.
+ * @param {object} res - The response object.
+ */
+const checkTicketAvailability = async (req, res) => {
+    const { cartId } = req.params;
+
+    try {
+        const cart = await Cart.findById(cartId);
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+
+        const ticket = await Ticket.findById(cart.ticket_id);
+        if (!ticket) {
+            return res.status(404).json({ message: 'Ticket not found' });
+        }
+
+        const isAvailable = ticket.remaining_quantity > 0;
+        return res.json({ isAvailable });
+    } catch (error) {
+        console.error('Error checking ticket availability:', error);
+        return res.status(500).json({ message: 'Server error' });
     }
 };
 
@@ -71,7 +115,7 @@ const removeCart = async (req, res) => {
  */
 const updateCartQuantity = async (req, res) => {    
     const { cartId } = req.params;
-    const { quantity } = req.body;
+    const { status } = req.body;
 
     try {
         const cart = await Cart.findById(cartId);
@@ -79,10 +123,30 @@ const updateCartQuantity = async (req, res) => {
             return res.status(404).json({ message: 'Cart not found' });
         }
 
-        cart.quantity = quantity;
-        await cart.save();
-
-        res.sendStatus(200);
+        if (status == 'decrement') {
+            cart.quantity -= 1;
+            await cart.save();
+            
+            const ticket = await Ticket.findById(cart.ticket_id);
+            ticket.remaining_quantity += 1;
+            await ticket.save();
+    
+            res.sendStatus(200);
+        } else if (status == 'increment') {
+            const ticket = await Ticket.findById(cart.ticket_id);
+            if (ticket.remaining_quantity > 0) {
+                cart.quantity += 1;
+                await cart.save();            
+                
+                ticket.remaining_quantity -= 1;
+                await ticket.save();
+                res.sendStatus(200);
+            } else {
+                return res.status(404).json({ message: 'No ticket available!' });
+            }
+        } else {
+            return res.status(404).json({ message: 'Update quantity ticket fail!' });
+        }
     } catch (error) {
         console.error('Error updating cart quantity:', error);
         throw error;
@@ -92,5 +156,6 @@ const updateCartQuantity = async (req, res) => {
 module.exports = {
     renderCart,
     removeCart,
+    checkTicketAvailability,
     updateCartQuantity
 } 
