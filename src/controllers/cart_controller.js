@@ -66,11 +66,11 @@ const removeCart = async (req, res) => {
         if (!ticket) {
             return res.status(404).json({ message: 'Ticket not found' });
         }
-    
-        await Cart.findByIdAndDelete(id);
-    
-        ticket.remaining_quantity += 1;
+        
+        ticket.remaining_quantity += cart.quantity;
         await ticket.save();
+
+        await Cart.findByIdAndDelete(id);
     
         res.sendStatus(200);
     } catch (error) {
