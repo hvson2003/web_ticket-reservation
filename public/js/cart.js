@@ -23,20 +23,45 @@ document.addEventListener('DOMContentLoaded', function () {
             const currentValue = parseInt(quantityInput.value);
             if (currentValue > parseInt(quantityInput.min)) {
                 quantityInput.value = currentValue - 1;                
-                updateQuantity(cartId, quantityInput.value);
-                updateModal();
+                updateQuantity(cartId, 'decrement');
             }
         });
 
-        incrementBtn.addEventListener('click', function() {
+        incrementBtn.addEventListener('click', async function() {
             const currentValue = parseInt(quantityInput.value);
-            quantityInput.value = currentValue + 1;            
-            updateQuantity(cartId, quantityInput.value);
-            updateModal();
+            const isAvailable = await checkTicketAvailability(cartId); // Kiểm tra số lượng vé khả dụng
+            
+            if (isAvailable) {
+                quantityInput.value = currentValue + 1;
+                updateQuantity(cartId, 'increment');
+            } else {
+                Snackbar({
+                    type: 'error',
+                    message: 'Not enough tickets available!'
+                });
+            }
         });
     });
 
-    async function updateQuantity(cartId, quantity) {
+    async function checkTicketAvailability(cartId) {
+        try {
+            const response = await fetch(`/carts/check-availability/${cartId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+    
+            const data = await response.json();
+            return data.isAvailable;
+        } catch (error) {
+            console.error('Error checking ticket availability:', error);
+            return false; 
+        }
+    }
+
+    async function updateQuantity(cartId, status) {
         try {
             const response = await fetch(`/carts/update/${cartId}`, {
                 method: 'PATCH',
@@ -44,13 +69,18 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest'
                 },
-                body: JSON.stringify({ quantity })
+                body: JSON.stringify({ 
+                    status
+                })
             });
 
-            const data = await response.json();
-            if (!response.ok) {
-                console.error('Error updating quantity:', data.error);
-            }
+            if (response.status === 400) {
+                const { message } = await response.json();
+                Snackbar({
+                    type: 'error',
+                    message
+                });
+            }     
         } catch (error) {
             console.error('Error:', error);
         }

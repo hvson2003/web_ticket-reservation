@@ -12,7 +12,7 @@ const router = require('express').Router();
 /**
  * custom modules
  */
-const { renderCart, removeCart, updateCartQuantity } = require('../controllers/cart_controller');
+const { renderCart, removeCart, checkTicketAvailability, updateCartQuantity } = require('../controllers/cart_controller');
 
 // Route to render cart page
 router.get('/', renderCart);
@@ -22,5 +22,9 @@ router.delete('/remove/:id', removeCart);
 
 // Route to update cart item quantity
 router.patch('/update/:cartId', updateCartQuantity);
+
+// Route check ticket availability
+router.get('/check-availability/:cartId', checkTicketAvailability);
+
 
 module.exports = router;
