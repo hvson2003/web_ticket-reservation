@@ -6,7 +6,11 @@ const Ticket = require('../models/ticket_model');
 const addTicket = async (req, res) => {    
     try {
         const { ticketId } = req.params; 
-        const userId = req.session.user.user_id;
+        const userId = req.session.user ? req.session.user.user_id : '';
+
+        if (!userId) {
+            return res.status(400).json({ message: 'Please login to add ticket.' });
+        }
 
         if (!ticketId || !userId) {
             return res.status(400).json({ message: 'Invalid request parameters.' });
