@@ -13,6 +13,21 @@ Thông tin để test phần thanh toán (Stripe sandbox):
 - Số CVC: 123
 
 
+## Các chức năng của hệ thống đặt vé:
+- **Hiển thị danh sách vé**:
+  - Hệ thống cần hiển thị danh sách tất cả các vé có sẵn, bao gồm tên, giá và số lượng còn lại.
+  - Hệ thống cần chỉ rõ vé nào đang có sẵn hoặc đã được đặt.
+- **Đặt vé**:
+  - Người dùng có thể đặt vé nếu nó còn khả dụng.
+  - Khi vé được đặt, hệ thống cần cập nhật trạng thái khả dụng của vé và lưu thông tin đặt vé bao gồm tên người dùng và thời gian đặt.
+- **Xác nhận đặt vé**:
+  - Người dùng có thể hoàn tất thanh toán và xác nhận đặt vé trong 5 phút.
+  - Khi vé được xác nhận (đã thanh toán), hệ thống cập nhật thời gian xác nhận và lưu trữ thông tin thanh toán.
+- **Hủy vé**:
+  - Người dùng có thể hủy đặt vé.
+  - Khi vé bị hủy, hệ thống cần hoàn trả 90% giá vé cho người dùng và cập nhật lại trạng thái khả dụng của vé.
+
+
 ## API Endpoints
 ### **Đăng ký người dùng**
 - **URL:** `/register`
@@ -62,7 +77,6 @@ Thông tin để test phần thanh toán (Stripe sandbox):
     
 
 ## Công nghệ đã sử dụng
-
 - **HTML**: Xây dựng cấu trúc cho các trang web.
 - **CSS**: Tạo kiểu dáng cho ứng dụng.
 - **JavaScript**: Thêm tính năng động cho các phần tử trên trang.
@@ -74,17 +88,3 @@ Thông tin để test phần thanh toán (Stripe sandbox):
 - **Mongoose**: ODM (Object Data Modeling) cho MongoDB trong Node.js.
 - **Stripe API**: Xử lý thanh toán trực tuyến.
 - **Node-cron**: Thiết lập và quản lý các công việc tự động (cron jobs) như hủy các đặt vé không thanh toán sau một khoảng thời gian.
-
-## Các chức năng của hệ thống đặt vé:
-- **Hiển thị danh sách vé**:
-  - Hệ thống cần hiển thị danh sách tất cả các vé có sẵn, bao gồm tên, giá và số lượng còn lại.
-  - Hệ thống cần chỉ rõ vé nào đang có sẵn hoặc đã được đặt.
-- **Đặt vé**:
-  - Người dùng có thể đặt vé nếu nó còn khả dụng.
-  - Khi vé được đặt, hệ thống cần cập nhật trạng thái khả dụng của vé và lưu thông tin đặt vé bao gồm tên người dùng và thời gian đặt.
-- **Xác nhận đặt vé**:
-  - Người dùng có thể hoàn tất thanh toán và xác nhận đặt vé trong 5 phút.
-  - Khi vé được xác nhận (đã thanh toán), hệ thống cập nhật thời gian xác nhận và lưu trữ thông tin thanh toán.
-- **Hủy vé**:
-  - Người dùng có thể hủy đặt vé.
-  - Khi vé bị hủy, hệ thống cần hoàn trả 90% giá vé cho người dùng và cập nhật lại trạng thái khả dụng của vé.
