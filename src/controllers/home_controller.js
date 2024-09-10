@@ -21,7 +21,8 @@ const renderHome = async (req, res) => {
         const userId = req.session.user && req.session.user.user_id ? req.session.user.user_id : '';
 
         const totalTickets = await Ticket.countDocuments();
-        const pagination = getPagination('/', req.params, 15, totalTickets); 
+        
+        const pagination = getPagination('/', req.params, 9, totalTickets);         
 
         const allTickets = await Ticket.find()
             .select('id name price remaining_quantity status')
