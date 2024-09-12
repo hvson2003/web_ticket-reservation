@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!bookingId) return;
         
         const response = await fetch(`/bookings/${bookingId}/cancel`, {
-            method: 'POST',
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
             },

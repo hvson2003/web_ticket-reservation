@@ -76,7 +76,7 @@ const cancelBooking = async (req, res) => {
 
 const renderCheckout = async (req, res) => {
     try {
-        const tickets_info = JSON.parse(req.body.tickets_info);
+        const tickets_info = JSON.parse(req.query.tickets_info);
 
         const total_cost = tickets_info.reduce((sum, ticket) => {
             return sum + (ticket.price * ticket.quantity);
@@ -100,7 +100,7 @@ const renderCheckout = async (req, res) => {
                 tickets_info: JSON.stringify(tickets_info),
                 total_cost: total_cost.toString()
             }
-        });+
+        });
 
         res.redirect(session.url);
     } catch (error) {
@@ -108,6 +108,7 @@ const renderCheckout = async (req, res) => {
         res.status(500).send('An error occurred while creating the checkout session');
     }
 };
+
 
 
 const handleCheckout = async (req, res) => {
