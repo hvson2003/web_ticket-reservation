@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
         // Create a form to submit the ticket info
         const form = document.createElement('form');
-        form.method = 'POST';
+        form.method = 'get';
         form.action = '/bookings/checkout';
     
         // Create hidden input to hold the ticket data

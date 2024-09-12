@@ -14,6 +14,6 @@ const router = require('express').Router();
 const { addTicket } = require('../controllers/ticket_controller');
 
 // PUT route: add ticket
-router.post('/:ticketId/add', addTicket);
+router.post('/add-to-cart/:ticketId', addTicket);
 
 module.exports = router;

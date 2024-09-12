@@ -18,10 +18,10 @@ const { renderBookedTickets, addBooking, cancelBooking, renderCheckout, handleCh
 router.get('/', renderBookedTickets);
 
 // Route to cancel a booking by its ID
-router.post('/:id/cancel', cancelBooking);
+router.delete('/:id/cancel', cancelBooking);
 
 // Route to render the checkout page
-router.post('/checkout', renderCheckout);
+router.get('/checkout', renderCheckout);
 
 // Route to handle successful checkout
 router.get('/checkout/success', handleCheckout);
