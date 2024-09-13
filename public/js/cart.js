@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         incrementBtn.addEventListener('click', async function() {
             const currentValue = parseInt(quantityInput.value);
-            const isAvailable = await checkTicketAvailability(cartId); // Kiểm tra số lượng vé khả dụng
+            const isAvailable = await checkTicketAvailability(cartId);
             
             if (isAvailable) {
                 quantityInput.value = currentValue + 1;
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function updateQuantity(cartId, status) {
         try {
-            const response = await fetch(`/carts/update/${cartId}`, {
+            const response = await fetch(`/carts/update-quantity/${cartId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Handle remove button
+    // Handle add ticket button
     const addBookingButtons = document.querySelectorAll('.add-ticket-btn');
     addBookingButtons.forEach(button => {
         button.addEventListener('click', async function() {

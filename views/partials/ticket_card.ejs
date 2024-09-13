@@ -4,7 +4,6 @@
         name,
         price,
         remaining_quantity,
-        status,
         isBooked
     } = locals.ticket || {};
 %>
@@ -24,7 +23,7 @@
         </div>
     </div>
     <div class="card-footer">
-        <% if (status === 'available' && !isBooked) { %>
+        <% if (!isBooked) { %>
             <a class="btn btn-primary add-ticket-btn" data-ticket-id="<%= _id %>">Add Ticket</a>
         <% } else { %>
             <a class="btn btn-light">Booked</a>

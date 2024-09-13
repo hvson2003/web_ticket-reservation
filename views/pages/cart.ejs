@@ -10,7 +10,7 @@
         <% locals.allCarts.forEach(cart => { %>
             <%- include('../partials/cart_card', { cart }) %>
         <% }); %>
-        <form action="/bookings/add" method="post">
+        <form action="/carts/add-to-booking" method="post">
             <% locals.allCarts.forEach(cart => { %>
                 <input type="hidden" name="carts[]" value="<%= cart._id %>">
             <% }); %>

@@ -12,16 +12,19 @@ const router = require('express').Router();
 /**
  * custom modules
  */
-const { renderCart, removeCart, checkTicketAvailability, updateCartQuantity } = require('../controllers/cart_controller');
+const { renderCart, addToBooking, removeCart, checkTicketAvailability, updateCartQuantity } = require('../controllers/cart_controller');
 
 // Route to render cart page
 router.get('/', renderCart);
 
+// Route to add new booking
+router.post('/add-to-booking', addToBooking);
+
 // Route to delete cart item
 router.delete('/remove/:id', removeCart);
 
-// Route to update cart item quantity
-router.patch('/update/:cartId', updateCartQuantity);
+// Route to update ticket quantity in cart 
+router.patch('/update-quantity/:cartId', updateCartQuantity);
 
 // Route check ticket availability
 router.get('/check-availability/:cartId', checkTicketAvailability);

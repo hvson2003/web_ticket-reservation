@@ -20,11 +20,6 @@ const ticketSchema = new mongoose.Schema({
     remaining_quantity: {
         type: Number,
         required: true
-    },
-    status: {
-        type: String,
-        enum: ['available', 'booked'],
-        default: 'available'
     }
 }, {
     timestamps: true
