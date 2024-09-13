@@ -22,11 +22,11 @@ const renderBookedTickets = async (req, res) => {
 
         const allBookings = await Booking.find({ user_id: req.session.user.user_id })
         .populate('tickets.ticket_id')
-        .sort({ updatedAt: 'desc' })
+        .sort({ createdAt: 'desc' })
         .limit(pagination.limit)
         .skip(pagination.skip);        
 
-        res.render('./pages/booked_tickets', {
+        res.render('./pages/booking', {
             sessionUser: req.session.user,
             allBookings,
             pagination
@@ -36,6 +36,46 @@ const renderBookedTickets = async (req, res) => {
         throw error;
     }
 }
+
+const addToBooking = async (req, res) => {
+    try {
+        const cartIds = req.body.carts || [];
+        if (cartIds.length === 0) {
+            return res.redirect('back');
+        }
+
+        const carts = await Cart.find({ _id: { $in: cartIds } }).populate('ticket_id');
+
+        if (carts.length === 0) {
+            return res.redirect('back');
+        }
+
+        const booking_info = carts.map(cart => ({
+            ticket_id: cart.ticket_id._id,
+            name: cart.ticket_id.name,
+            price: cart.ticket_id.price,
+            quantity: cart.quantity
+        }));
+
+        // Tạo một booking mới với trạng thái 'pending'
+        const booking = new Booking({
+            user_id: req.session.user.user_id,
+            tickets: booking_info,
+            total_cost: booking_info.reduce((sum, ticket) => sum + (ticket.price * ticket.quantity), 0),
+            status: 'pending'
+        });
+
+        await booking.save();
+
+        await Cart.deleteMany({ _id: { $in: cartIds }, user_id: req.session.user.user_id });
+
+        res.redirect('/bookings'); 
+    } catch (error) {
+        console.error('Lỗi khi thêm vào danh sách đặt chỗ:', error);
+        res.status(500).send('Đã xảy ra lỗi khi thêm vào danh sách đặt chỗ');
+    }
+};
+
 
 const cancelBooking = async (req, res) => {
     try {
@@ -74,17 +114,27 @@ const cancelBooking = async (req, res) => {
 
 };
 
+
 const renderCheckout = async (req, res) => {
     try {
-        const tickets_info = JSON.parse(req.query.tickets_info);
+        const booking_info = JSON.parse(req.query.booking_info);
+        
+        if (!booking_info || !booking_info.id) {
+            return res.status(400).send('Booking information is missing or invalid');
+        }
 
-        const total_cost = tickets_info.reduce((sum, ticket) => {
-            return sum + (ticket.price * ticket.quantity);
-        }, 0);
+        const bookingId = booking_info.id;
+
+        const booking = await Booking.findById(bookingId).populate('tickets.ticket_id');
+        if (!booking) {
+            return res.status(404).send('Booking not found');
+        }
+
+        const total_cost = booking.total_cost;
 
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
-            line_items: tickets_info.map(ticket => ({
+            line_items: booking_info.tickets.map(ticket => ({
                 price_data: {
                     currency: 'vnd',
                     product_data: { name: ticket.name },
@@ -96,8 +146,7 @@ const renderCheckout = async (req, res) => {
             success_url: `${process.env.BASE_URL}/bookings/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.BASE_URL}/bookings/checkout/cancel`,
             metadata: {
-                user_id: req.session.user.user_id,
-                tickets_info: JSON.stringify(tickets_info),
+                booking_id: bookingId,
                 total_cost: total_cost.toString()
             }
         });
@@ -110,7 +159,6 @@ const renderCheckout = async (req, res) => {
 };
 
 
-
 const handleCheckout = async (req, res) => {
     try {
         const sessionId = req.query.session_id;
@@ -120,26 +168,18 @@ const handleCheckout = async (req, res) => {
 
         const session = await stripe.checkout.sessions.retrieve(sessionId);
 
-        const tickets_info = JSON.parse(session.metadata.tickets_info);
+        const bookingId = session.metadata.booking_id;
         const total_cost = session.metadata.total_cost;
-        const userId = session.metadata.user_id;
 
-        const booking = new Booking({
-            user_id: userId,
-            tickets: tickets_info,
-            total_cost,
-            status: 'paid',
-            payment_intent_id: session.payment_intent
-        });
+        const booking = await Booking.findById(bookingId).populate('tickets.ticket_id');
+        if (!booking) {
+            return res.status(404).send('Booking not found');
+        }
+
+        booking.status = 'paid';
+        booking.payment_intent_id = session.payment_intent;
 
         await booking.save();
-
-        const ticketIds = tickets_info.map(ticket => ticket.ticket_id);
-
-        await Cart.deleteMany({ 
-            ticket_id: { $in: ticketIds }, 
-            user_id: userId
-        });
 
         res.render('./pages/success', {
             sessionUser: req.session.user
@@ -150,6 +190,8 @@ const handleCheckout = async (req, res) => {
     }
 };
 
+
+
 const cancelCheckout = async (req, res) => {
     res.render('./pages/cancel', {
         sessionUser: req.session.user
@@ -158,6 +200,7 @@ const cancelCheckout = async (req, res) => {
 
 module.exports = {
     renderBookedTickets,
+    addToBooking,
     cancelBooking,
     renderCheckout,
     handleCheckout,

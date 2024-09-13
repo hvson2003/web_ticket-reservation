@@ -111,42 +111,34 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Handle remove button
+    const addBookingButtons = document.querySelectorAll('.add-ticket-btn');
+    addBookingButtons.forEach(button => {
+        button.addEventListener('click', async function() {
+            const ticketId = this.getAttribute('data-ticket-id');
 
-    // Handle purchase button
-    const makePaymentBtn = document.getElementById('make-payment-btn');
-    makePaymentBtn.addEventListener('click', function(e) {
-        e.preventDefault();
+            const response = await fetch(`/tickets/add-to-cart/${ticketId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    ticket_id: ticketId
+                }),
+            })    
+            
+            if (response.ok) {
+                this.textContent = 'Booked'; 
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-light');
+                this.disabled = true; 
+                Snackbar({ message: 'Ticket added to your cart!'});
+            }
 
-        const tickets_info = [];
-        document.querySelectorAll('.cart').forEach(item => {
-            const ticket_id = item.querySelector('.quantity-input').getAttribute('data-ticket-id');
-            const quantity = item.querySelector('.quantity-input').value;
-            const price = item.querySelector('.quantity-input').getAttribute('data-price');
-            const name = item.querySelector('.card-title').textContent.trim();
-    
-            tickets_info.push({
-                ticket_id,
-                name,
-                price: parseFloat(price),
-                quantity: parseInt(quantity),
-            });
+            if (response.status === 400) {
+                const { message } = await response.json();
+                Snackbar({ type: 'error', message });            
+            }
         });
-    
-        // Create a form to submit the ticket info
-        const form = document.createElement('form');
-        form.method = 'get';
-        form.action = '/bookings/checkout';
-    
-        // Create hidden input to hold the ticket data
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'tickets_info';
-        input.value = JSON.stringify(tickets_info);
-    
-        form.appendChild(input);
-        document.body.appendChild(form);
-    
-        // Submit the form
-        form.submit();
     });
 });
