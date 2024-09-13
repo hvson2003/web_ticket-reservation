@@ -24,7 +24,7 @@ const { connectDB, disconnectDB } = require('./src/config/mongoose_config');
 /**
  * schedule module
  */
-// const cronJobs = require('./src/utils/corn_job');
+const cronJobs = require('./src/utils/corn_job');
 
 
 /**
