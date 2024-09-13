@@ -10,11 +10,15 @@
         <% locals.allCarts.forEach(cart => { %>
             <%- include('../partials/cart_card', { cart }) %>
         <% }); %>
-        <form action="" method="post">
+        <form action="/bookings/add" method="post">
+            <% locals.allCarts.forEach(cart => { %>
+                <input type="hidden" name="carts[]" value="<%= cart._id %>">
+            <% }); %>
             <p class="d-grid gap-2 d-md-flex justify-content-md-end me-4 pe-5 pt-3">
-                <input id="make-payment-btn" class="btn btn-success" type="submit" value="Proceed To Check Out">
+                <input id="add-to-booking" class="btn btn-success" type="submit" value="Add To Booking">
             </p>
-        </form>        
+        </form>
+           
     <% } else { %>
         <p class="text text-dark ps-5 pt-3">You haven't added any tickets yet.</p>
     <% } %>
