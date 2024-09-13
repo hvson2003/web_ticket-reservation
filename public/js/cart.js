@@ -110,35 +110,4 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
-
-    // Handle add ticket button
-    const addBookingButtons = document.querySelectorAll('.add-ticket-btn');
-    addBookingButtons.forEach(button => {
-        button.addEventListener('click', async function() {
-            const ticketId = this.getAttribute('data-ticket-id');
-
-            const response = await fetch(`/tickets/add-to-cart/${ticketId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                    ticket_id: ticketId
-                }),
-            })    
-            
-            if (response.ok) {
-                this.textContent = 'Booked'; 
-                this.classList.remove('btn-primary');
-                this.classList.add('btn-light');
-                this.disabled = true; 
-                Snackbar({ message: 'Ticket added to your cart!'});
-            }
-
-            if (response.status === 400) {
-                const { message } = await response.json();
-                Snackbar({ type: 'error', message });            
-            }
-        });
-    });
 });

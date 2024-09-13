@@ -12,10 +12,10 @@ const router = require('express').Router();
 /**
  * custome modules
  */
-const { renderBookedTickets, cancelBooking, renderCheckout, handleCheckout, cancelCheckout } = require('../controllers/booking_controller');
+const { renderBookingList, cancelBooking, renderCheckout, handleCheckout, cancelCheckout } = require('../controllers/booking_controller');
 
 // Route to render the page showing booked tickets
-router.get('/', renderBookedTickets);
+router.get('/', renderBookingList);
 
 // Route to cancel a booking by its ID
 router.delete('/:id/cancel', cancelBooking);

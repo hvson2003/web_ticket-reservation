@@ -14,6 +14,7 @@ const router = require('express').Router();
  */
 const { renderHome } = require('../controllers/home_controller');
 
+// Route to render home page
 router.get(['/', '/page/:pageNumber'], renderHome);
 
 module.exports = router;
