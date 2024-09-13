@@ -17,10 +17,12 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
  */
 const renderBookedTickets = async (req, res) => {
     try {
-        const totalBookedTicket = await Booking.countDocuments({ user_id: req.session.user.user_id });
+        const userId = req.session.user && req.session.user.user_id ? req.session.user.user_id : '';
+
+        const totalBookedTicket = await Booking.countDocuments({ user_id: userId });
         const pagination = getPagination('/', req.params, 15, totalBookedTicket);
 
-        const allBookings = await Booking.find({ user_id: req.session.user.user_id })
+        const allBookings = await Booking.find({ user_id: userId })
         .populate('tickets.ticket_id')
         .sort({ createdAt: 'desc' })
         .limit(pagination.limit)
