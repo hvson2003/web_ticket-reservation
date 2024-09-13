@@ -1,3 +1,7 @@
+/**
+ * @license Apache-2.0
+*/
+
 'use strict';
 
 const Booking = require('../models/cart_model');

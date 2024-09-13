@@ -34,7 +34,7 @@ const renderCart = async (req, res) => {
                 user_id: userId,
             })
             .populate('ticket_id')
-            .sort({ updatedAt: 'desc' })
+            .sort({ createdAt: 'desc' })
             .limit(pagination.limit)
             .skip(pagination.skip);
         
@@ -50,7 +50,7 @@ const renderCart = async (req, res) => {
 }
 
 /**
- * Delete cart
+ * Delete cart card
  * @param {object} req - The request object.
  * @param {object} res - The response object.
  */
@@ -148,7 +148,7 @@ const checkTicketAvailability = async (req, res) => {
 
 
 /**
- * Update quantity cart
+ * Update ticket quantity in cart
  * @param {object} req - The request object.
  * @param {object} res - The response object.
  */

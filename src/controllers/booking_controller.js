@@ -5,19 +5,26 @@
 'use strict';
 
 const Booking = require('../models/booking_model');
-const Cart = require('../models/cart_model');
 const Ticket = require('../models/ticket_model');
 const getPagination = require('../utils/get_pagination_utils');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); 
 
 /**
- * Render the booked list
+ * Render the all booking list of user
  * @param {object} req - The request object.
  * @param {object} res - The response object.
  */
-const renderBookedTickets = async (req, res) => {
+const renderBookingList = async (req, res) => {
     try {
         const userId = req.session.user && req.session.user.user_id ? req.session.user.user_id : '';
+
+        if (!userId) {
+            return res.status(401).render('./pages/booking', {
+                sessionUser: req.session.user,
+                allBookings: [],
+                pagination: {}
+            });
+        }
 
         const totalBookedTicket = await Booking.countDocuments({ user_id: userId });
         const pagination = getPagination('/', req.params, 15, totalBookedTicket);
@@ -39,6 +46,12 @@ const renderBookedTickets = async (req, res) => {
     }
 }
 
+
+/**
+ * Handle cancel booking
+ * @param {object} req - The request object.
+ * @param {object} res - The response object.
+ */
 const cancelBooking = async (req, res) => {
     try {
         const bookingId = req.params.id ? req.params.id : '';
@@ -77,6 +90,11 @@ const cancelBooking = async (req, res) => {
 };
 
 
+/**
+ * Render the checkout page
+ * @param {object} req - The request object.
+ * @param {object} res - The response object.
+ */
 const renderCheckout = async (req, res) => {
     try {
         const booking_info = JSON.parse(req.query.booking_info);
@@ -121,6 +139,11 @@ const renderCheckout = async (req, res) => {
 };
 
 
+/**
+ * Handle the checkout process if successful: update the booking status and save the payment information.
+ * @param {object} req - The request object.
+ * @param {object} res - The response object.
+ */
 const handleCheckout = async (req, res) => {
     try {
         const sessionId = req.query.session_id;
@@ -151,7 +174,11 @@ const handleCheckout = async (req, res) => {
 };
 
 
-
+/**
+ * Handle the checkout cancellation process, this function is triggered when the checkout process fails or is canceled.
+ * @param {object} req - The request object.
+ * @param {object} res - The response object.
+ */
 const cancelCheckout = async (req, res) => {
     res.render('./pages/cancel', {
         sessionUser: req.session.user
@@ -159,7 +186,7 @@ const cancelCheckout = async (req, res) => {
 };
 
 module.exports = {
-    renderBookedTickets,
+    renderBookingList,
     cancelBooking,
     renderCheckout,
     handleCheckout,
