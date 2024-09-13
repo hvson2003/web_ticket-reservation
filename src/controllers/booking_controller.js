@@ -39,46 +39,6 @@ const renderBookedTickets = async (req, res) => {
     }
 }
 
-const addToBooking = async (req, res) => {
-    try {
-        const cartIds = req.body.carts || [];
-        if (cartIds.length === 0) {
-            return res.redirect('back');
-        }
-
-        const carts = await Cart.find({ _id: { $in: cartIds } }).populate('ticket_id');
-
-        if (carts.length === 0) {
-            return res.redirect('back');
-        }
-
-        const booking_info = carts.map(cart => ({
-            ticket_id: cart.ticket_id._id,
-            name: cart.ticket_id.name,
-            price: cart.ticket_id.price,
-            quantity: cart.quantity
-        }));
-
-        // Tạo một booking mới với trạng thái 'pending'
-        const booking = new Booking({
-            user_id: req.session.user.user_id,
-            tickets: booking_info,
-            total_cost: booking_info.reduce((sum, ticket) => sum + (ticket.price * ticket.quantity), 0),
-            status: 'pending'
-        });
-
-        await booking.save();
-
-        await Cart.deleteMany({ _id: { $in: cartIds }, user_id: req.session.user.user_id });
-
-        res.redirect('/bookings'); 
-    } catch (error) {
-        console.error('Lỗi khi thêm vào danh sách đặt chỗ:', error);
-        res.status(500).send('Đã xảy ra lỗi khi thêm vào danh sách đặt chỗ');
-    }
-};
-
-
 const cancelBooking = async (req, res) => {
     try {
         const bookingId = req.params.id ? req.params.id : '';
@@ -171,7 +131,6 @@ const handleCheckout = async (req, res) => {
         const session = await stripe.checkout.sessions.retrieve(sessionId);
 
         const bookingId = session.metadata.booking_id;
-        const total_cost = session.metadata.total_cost;
 
         const booking = await Booking.findById(bookingId).populate('tickets.ticket_id');
         if (!booking) {
@@ -188,7 +147,6 @@ const handleCheckout = async (req, res) => {
         }); 
     } catch (error) {
         console.error('Error processing the booking:', error);
-        res.status(500).send('An error occurred while processing your booking');
     }
 };
 
@@ -202,7 +160,6 @@ const cancelCheckout = async (req, res) => {
 
 module.exports = {
     renderBookedTickets,
-    addToBooking,
     cancelBooking,
     renderCheckout,
     handleCheckout,

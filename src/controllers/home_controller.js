@@ -25,7 +25,7 @@ const renderHome = async (req, res) => {
         const pagination = getPagination('/', req.params, 9, totalTickets);         
 
         const allTickets = await Ticket.find()
-            .select('id name price remaining_quantity status')
+            .select('id name price remaining_quantity')
             .limit(pagination.limit)
             .skip(pagination.skip);
         
