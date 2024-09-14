@@ -20,12 +20,13 @@ const getPagination = require('../utils/get_pagination_utils');
  */
 const renderCart = async (req, res) => {
     try {
-        const userId = req.session.user && req.session.user.user_id ? req.session.user.user_id : '';
-        
-        if (!userId) {
-            console.error("User ID is missing or invalid");
-            return res.status(400).json({ error: "User ID is missing or invalid" });
+        const user = req.session.user || {};
+
+        if (!user.userAuthenticated) {
+            return res.redirect('/');
         }
+        
+        const userId = user.user_id || '';
         
         const totalCards = await Cart.countDocuments();
         const pagination = getPagination('/', req.params, 15, totalCards);  
@@ -56,9 +57,9 @@ const renderCart = async (req, res) => {
  */
 const removeCart = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { cartId } = req.params;
     
-        const cart = await Cart.findById(id);
+        const cart = await Cart.findById(cartId);
         if (!cart) {
             return res.status(404).json({ message: 'Cart not found' });
         }
@@ -71,7 +72,7 @@ const removeCart = async (req, res) => {
         ticket.remaining_quantity += cart.quantity;
         await ticket.save();
 
-        await Cart.findByIdAndDelete(id);
+        await Cart.findByIdAndDelete(cartId);
     
         res.sendStatus(200);
     } catch (error) {
@@ -81,6 +82,12 @@ const removeCart = async (req, res) => {
     
 };
 
+
+/**
+ * Add all tickets to the booking list
+ * @param {object} req - The request object.
+ * @param {object} res - The response object.
+ */
 const addToBooking = async (req, res) => {
     try {
         const cartIds = req.body.carts || [];

@@ -15,7 +15,6 @@ const register = require('./src/routes/register_route');
 const login = require('./src/routes/login_route');
 const logout = require('./src/routes/logout_route');
 const home = require('./src/routes/home_route');
-const ticket = require('./src/routes/ticket_route');
 const booking = require('./src/routes/booking_route');
 const cart = require('./src/routes/cart_route');
 const { connectDB, disconnectDB } = require('./src/config/mongoose_config');
@@ -67,19 +66,16 @@ app.use('/register', register);
 /** login page */
 app.use('/login', login);
 
-/** logout page */
+/** logout */
 app.use('/logout', logout);
 
 /** home page */
 app.use('/', home);
 
-/** ticket page */
-app.use('/tickets', ticket);
-
 /** cart page */
 app.use('/carts', cart);
 
-/** booking page */
+/** booking page and handle checkout */
 app.use('/bookings', booking);
 
 

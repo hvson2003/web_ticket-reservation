@@ -21,6 +21,12 @@ const User = require('../models/user_model');
  * @param {object} res - The response object.
  */
 const renderRegister = (req, res) => {
+    const { userAuthenticated } = req.session.user || {};
+
+    if (userAuthenticated) {
+        return res.redirect('/')
+    }
+    
     res.render('./pages/register');
 }
 

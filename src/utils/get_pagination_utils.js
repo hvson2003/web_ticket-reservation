@@ -14,13 +14,16 @@ const getPagination = (currentRoute, reqParams, limit, totalBlogs) => {
     const skip = limit * (currentPage - 1);
     const totalPage = Math.ceil(totalBlogs / limit); 
 
+    const next = totalBlogs > (currentPage * limit) ? `${currentRoute === '/' ? currentRoute :  currentRoute + '/'}page/${currentPage + 1}` : '';
+    const prev = skip && currentPage <= totalPage ? `${currentRoute === '/' ? currentRoute :  currentRoute + '/'}page/${currentPage - 1}` : '';
+
     const paginationObj = {
-        next: totalBlogs > (currentPage * limit) ? `${currentRoute}page/${currentPage + 1}` : null,
-        prev: skip && currentPage <= totalPage ? `${currentRoute}page/${currentPage - 1}` : null,
+        next,
+        prev,
         totalPage,
         currentPage,
         skip,
-        limit
+        limit,
     };
 
     return paginationObj;
