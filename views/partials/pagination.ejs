@@ -5,24 +5,26 @@
         totalPage,
         currentPage
     } = locals.pagination;
+
+    console.log(pagination);
 %>
 
 <nav aria-label="Page navigation example">
   <ul class="pagination justify-content-center">
     <li class="page-item <%= !prev ? 'disabled' : '' %>">
-      <a class="page-link" href="<%= prev %>" tabindex="-1">Previous</a>
+      <a class="page-link" href="<%= process.env.BASE_URL + prev %>" tabindex="-1">Previous</a>
     </li>
 
     <% if (prev) { %>
-      <li class="page-item"><a class="page-link" href="/page/<%= currentPage-1 %>"><%= currentPage-1 %></a></li>
+      <li class="page-item"><a class="page-link" href="<%= process.env.BASE_URL + prev %>"><%= currentPage-1 %></a></li>
     <% } %>
-    <li class="page-item"><a class="page-link" href="/page/<%= currentPage %>"><%= currentPage %></a></li>
+    <li class="page-item"><a class="page-link active" aria-disabled="true"><%= currentPage %></a></li>
     <% if (next) { %>
-      <li class="page-item"><a class="page-link" href="/page/<%= currentPage+1 %>"><%= currentPage+1 %></a></li>
+      <li class="page-item"><a class="page-link" href="<%= process.env.BASE_URL + next %>"><%= currentPage+1 %></a></li>
     <% } %>
     
     <li class="page-item <%= !next ? 'disabled' : '' %>">
-      <a class="page-link" href="<%= next %>">Next</a>
+      <a class="page-link" href="<%=  process.env.BASE_URL + next %>">Next</a>
     </li>
   </ul>
 </nav>

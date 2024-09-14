@@ -22,7 +22,7 @@ const renderHome = async (req, res) => {
 
         const totalTickets = await Ticket.countDocuments();
         
-        const pagination = getPagination('/', req.params, 9, totalTickets);         
+        const pagination = getPagination('/', req.params, 9, totalTickets);             
 
         const allTickets = await Ticket.find()
             .select('id name price remaining_quantity')
@@ -54,6 +54,50 @@ const renderHome = async (req, res) => {
     }
 };
 
+const addTicket = async (req, res) => {    
+    try {
+        const { ticketId } = req.params; 
+        const userId = req.session.user ? req.session.user.user_id : '';
+
+        if (!userId) {
+            return res.status(400).json({ message: 'Please login to add ticket.' });
+        }
+
+        if (!ticketId || !userId) {
+            return res.status(400).json({ message: 'Invalid request parameters.' });
+        }
+
+        const existingBooking = await Booking.findOne({ ticket_id: ticketId, user_id: userId });
+        if (existingBooking) {
+            return res.status(400).json({ message: 'Ticket already added to your booking.' });
+        }
+
+        const ticket = await Ticket.findById(ticketId);
+        if (!ticket) {
+            return res.status(404).json({ message: 'Ticket not found.' });
+        }
+
+        if (ticket.remaining_quantity <= 0) {
+            return res.status(400).json({ message: 'No tickets available.' });
+        }
+
+        const newBooking = new Booking({
+            ticket_id: ticketId,
+            user_id: userId,
+        });
+
+        await newBooking.save();
+
+        ticket.remaining_quantity -= 1;
+        await ticket.save();
+
+        res.sendStatus(200);
+    } catch (error) {
+        console.error('Error adding ticket to booking:', error);
+        throw error;
+    }
+};
+
 
 const checkIfTicketBooked = async (userId, ticketId) => {
     try {
@@ -68,5 +112,6 @@ const checkIfTicketBooked = async (userId, ticketId) => {
 
 module.exports = {
     renderHome,
+    addTicket,
     checkIfTicketBooked
 } 

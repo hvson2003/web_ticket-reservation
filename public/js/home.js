@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', async function() {
             const ticketId = this.getAttribute('data-ticket-id');
 
-            const response = await fetch(`/tickets/add-to-cart/${ticketId}`, {
+            const response = await fetch(`/add-to-cart/${ticketId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -21,7 +21,7 @@ router.get('/', renderCart);
 router.post('/add-to-booking', addToBooking);
 
 // Route to delete cart item
-router.delete('/remove/:id', removeCart);
+router.delete('/remove/:cartId', removeCart);
 
 // Route to update ticket quantity in cart 
 router.patch('/update-quantity/:cartId', updateCartQuantity);

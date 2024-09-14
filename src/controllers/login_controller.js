@@ -21,12 +21,11 @@ const User = require('../models/user_model');
  * @param {object} res - The HTTP response object
  */
 const renderLogin = (req, res) => {
-    // const { userAuthenticated } = req.session.user || {};
+    const { userAuthenticated } = req.session.user || {};
 
-    // // Handles case when user already logged in
-    // if (userAuthenticated) {
-    //     return res.redirect('/')
-    // }
+    if (userAuthenticated) {
+        return res.redirect('/')
+    }
 
     res.render('./pages/login');
 }

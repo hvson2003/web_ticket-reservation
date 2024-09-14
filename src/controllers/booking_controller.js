@@ -16,24 +16,22 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
  */
 const renderBookingList = async (req, res) => {
     try {
-        const userId = req.session.user && req.session.user.user_id ? req.session.user.user_id : '';
+        const user = req.session.user || {};
 
-        if (!userId) {
-            return res.status(401).render('./pages/booking', {
-                sessionUser: req.session.user,
-                allBookings: [],
-                pagination: {}
-            });
+        if (!user.userAuthenticated) {
+            return res.redirect('/');
         }
+        
+        const userId = user.user_id || '';
 
         const totalBookedTicket = await Booking.countDocuments({ user_id: userId });
-        const pagination = getPagination('/', req.params, 15, totalBookedTicket);
+        const pagination = getPagination('/bookings', req.params, 5, totalBookedTicket);
 
         const allBookings = await Booking.find({ user_id: userId })
-        .populate('tickets.ticket_id')
-        .sort({ createdAt: 'desc' })
-        .limit(pagination.limit)
-        .skip(pagination.skip);        
+            .populate('tickets.ticket_id')
+            .sort({ createdAt: 'desc' })
+            .limit(pagination.limit)
+            .skip(pagination.skip);        
 
         res.render('./pages/booking', {
             sessionUser: req.session.user,
