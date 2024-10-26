@@ -101,11 +101,24 @@ const addTicket = async (req, res) => {
 
 const checkIfTicketBooked = async (userId, ticketId) => {
     try {
-        const booking = await Booking.findOne({ user_id: userId, ticket_id: ticketId });
+        const booking = await Booking.findOneAndUpdate(
+            { ticket_id: ticketId, isLocked: false },
+            { user_id: userId, isLocked: true },
+            { new: true }
+        );
+
+        if (!booking) {
+            return res.status(409).json({ message: 'Ticket is already booked or locked by another user !' });
+            return false;
+        }
+
+        booking.status = 'booked';
+        booking.isLocked = false;
+        await booking.save();
         
-        return booking ? true : false;
+        return true;
     } catch (error) {
-        console.error('Error checking booking status:', error);
+        console.error("Error booking ticket:", error);
         return false;
     }
 };
